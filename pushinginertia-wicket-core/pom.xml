@@ -12,6 +12,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
+        <dependency>
+            <groupId>com.pushinginertia.commons</groupId>
+            <artifactId>pushinginertia-commons-service</artifactId>
+            <version>${pushinginertia-commons.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
