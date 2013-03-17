@@ -14,6 +14,7 @@
 
     <properties>
         <slf4j.version>1.6.6</slf4j.version>
+        <servlet.version>2.5</servlet.version>
         <wicket.version>1.5.9</wicket.version>
         <pushinginertia-commons.version>1.0-SNAPSHOT</pushinginertia-commons.version>
 
@@ -32,6 +33,11 @@
     </distributionManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.pushinginertia.commons</groupId>
+            <artifactId>pushinginertia-commons-lang</artifactId>
+            <version>${pushinginertia-commons.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

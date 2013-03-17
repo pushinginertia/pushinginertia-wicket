@@ -17,6 +17,11 @@
             <artifactId>pushinginertia-commons-service</artifactId>
             <version>${pushinginertia-commons.version}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
