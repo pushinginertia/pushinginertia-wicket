@@ -13,8 +13,9 @@
     </modules>
 
     <properties>
-        <commons-net.version>3.1</commons-net.version>
         <slf4j.version>1.6.6</slf4j.version>
+        <wicket.version>1.5.9</wicket.version>
+        <pushinginertia-commons.version>1.0-SNAPSHOT</pushinginertia-commons.version>
 
         <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
@@ -28,10 +29,6 @@
             <id>releases</id>
             <url>https://github.com/pushinginertia/maven-repository/releases</url>
         </repository>
-        <!--<snapshotRepository>-->
-            <!--<id>snapshots</id>-->
-            <!--<url>https://github.com/pushinginertia/maven-repository/raw/master/snapshots</url>-->
-        <!--</snapshotRepository>-->
     </distributionManagement>
 
     <dependencies>
@@ -40,11 +37,10 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>${commons-net.version}</version>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>${wicket.version}</version>
         </dependency>
 
         <dependency>
