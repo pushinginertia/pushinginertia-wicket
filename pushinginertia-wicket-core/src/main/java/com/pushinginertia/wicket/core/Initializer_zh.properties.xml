@@ -18,4 +18,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <entry key="NotEqualPasswordInputValidator">新密码必须不能与现有密码重复</entry>
+    <entry key="PasswordMinimumLengthValidator">密码至少需要${minimum}字节</entry>
 </properties>
