@@ -1,3 +1,18 @@
+/* Copyright (c) 2011-2013 Pushing Inertia
+ * All rights reserved.  http://pushinginertia.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.pushinginertia.wicket.core.form.behavior;
 
 import com.pushinginertia.commons.lang.CharUtils;
@@ -8,7 +23,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;import java.lang.Override;import java.lang.String;
+import org.slf4j.LoggerFactory;
 
 /**
  * Performs validation on inputs for first and family names, ensuring that they are each at least two characters, that
@@ -28,15 +43,24 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	private final TextField<String> firstName;
 	private final TextField<String> familyName;
 
+	/**
+	 * Performs validation on inputs for first and family names, ensuring that they are each at least two characters, that
+	 * one of those characters is not a period, that they are not the same values (regardless of case), and that they don't
+	 * contain characters that would not exist in a real name (such as punctuation).
+	 * @param firstName input for the user's first name
+	 * @param familyName input for the user's family name
+	 */
 	public RealFullNameValidator(final TextField<String> firstName, final TextField<String> familyName) {
 		this.firstName = ValidateAs.notNull(firstName, "firstName");
 		this.familyName = ValidateAs.notNull(familyName, "familyName");
 	}
 
+	@Override
 	public FormComponent<?>[] getDependentFormComponents() {
 		return new TextField[] {firstName, familyName};
 	}
 
+	@Override
 	public void validate(final Form<?> form) {
 		// 1. minimum length and no dot
 		if (!satisfiesLengthWithoutDot(firstName)) {
@@ -59,8 +83,10 @@ public class RealFullNameValidator extends AbstractFormValidator {
 
 		// 3. check for illegal characters
 		if (CharUtils.inCharArray(firstName.getInput(), ILLEGAL_CHARS) >= 0) {
+			LOG.info(toLogString(form, firstName));
 			error(firstName);
 		} else if (CharUtils.inCharArray(familyName.getInput(), ILLEGAL_CHARS) >= 0) {
+			LOG.info(toLogString(form, familyName));
 			error(familyName);
 		}
 	}
