@@ -19,4 +19,5 @@
 <properties>
     <entry key="NotEqualPasswordInputValidator">Your new password cannot be the same as your current password</entry>
     <entry key="PasswordMinimumLengthValidator">Password must be at least ${minimum} characters long</entry>
+    <entry key="RealFullNameValidator">Please enter your complete first and family names.</entry>
 </properties>
