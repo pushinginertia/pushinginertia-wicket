@@ -29,6 +29,26 @@ import java.util.Locale;
 public class TextFieldTitleCaseConverter extends AbstractConverter<String> {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(TextFieldTitleCaseConverter.class);
+	public static final int UPPERCASE_THRESHOLD = 55;
+	public static final int LOWERCASE_THRESHOLD = 85;
+
+	private final int uppercaseThreshold;
+	private final int lowercaseThreshold;
+
+	public TextFieldTitleCaseConverter() {
+		uppercaseThreshold = UPPERCASE_THRESHOLD;
+		lowercaseThreshold = LOWERCASE_THRESHOLD;
+	}
+
+	/**
+	 * A converter that fixes the case entered by a user.
+	 * @param uppercaseThreshold only perform conversion if the string is > N% uppercase
+	 * @param lowercaseThreshold only perform conversion if the string is > N% lowercase
+	 */
+	public TextFieldTitleCaseConverter(final int uppercaseThreshold, final int lowercaseThreshold) {
+		this.uppercaseThreshold = uppercaseThreshold;
+		this.lowercaseThreshold = lowercaseThreshold;
+	}
 
 	/**
 	 * Converts to the value rendered in the form input.
@@ -51,8 +71,8 @@ public class TextFieldTitleCaseConverter extends AbstractConverter<String> {
 						value,
 						NormalizeStringCaseUtils.TargetCase.TITLE,
 						NormalizeStringCaseUtils.Scope.PER_WORD,
-						50,
-						85);
+						uppercaseThreshold,
+						lowercaseThreshold);
 		if (!value.equals(normalized)) {
 			LOG.info("Normalized input string to title case from [{}] to [{}].", value, normalized);
 		}
