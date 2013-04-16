@@ -38,6 +38,11 @@
             <version>${pushinginertia-commons.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.pushinginertia.commons</groupId>
+            <artifactId>pushinginertia-commons-net</artifactId>
+            <version>${pushinginertia-commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>${servlet.version}</version>

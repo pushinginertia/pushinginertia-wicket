@@ -15,13 +15,13 @@
  */
 package com.pushinginertia.wicket.core;
 
+import com.pushinginertia.commons.net.util.HttpServletRequestUtils;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.StringTokenizer;
 
 /**
  * Static utility methods to help with the request cycle.
@@ -45,27 +45,9 @@ public final class RequestCycleUtils {
 
 	/**
 	 * Parses the host name from the request.
-	 * @param request request received from the user agent
-	 * @return null if unable to parse
-	 */
-	public static String getRequestHostName(final HttpServletRequest request) {
-		// maybe we are behind a proxy
-		String header = request.getHeader("X-Forwarded-Host");
-		if (header != null) {
-			// we are only interested in the first header entry
-			header = new StringTokenizer(header, ",").nextToken().trim();
-		}
-		if (header == null)
-			header = request.getHeader("Host");
-
-		return header;
-	}
-
-	/**
-	 * Parses the host name from the request.
 	 * @return null if unable to parse
 	 */
 	public static String getRequestHostName() {
-		return getRequestHostName(RequestCycleUtils.getHttpServletRequest());
+		return HttpServletRequestUtils.getRequestHostName(RequestCycleUtils.getHttpServletRequest());
 	}
 }
