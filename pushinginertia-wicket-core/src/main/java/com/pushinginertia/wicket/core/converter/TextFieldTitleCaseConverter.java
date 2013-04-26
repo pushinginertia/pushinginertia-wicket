@@ -32,12 +32,25 @@ public class TextFieldTitleCaseConverter extends AbstractConverter<String> {
 	public static final int UPPERCASE_THRESHOLD = 55;
 	public static final int LOWERCASE_THRESHOLD = 85;
 
+	private static final TextFieldTitleCaseConverter DEFAULT = new TextFieldTitleCaseConverter();
+
 	private final int uppercaseThreshold;
 	private final int lowercaseThreshold;
 
-	public TextFieldTitleCaseConverter() {
+	/**
+	 * A converter that fixes the case entered by a user.
+	 */
+	private TextFieldTitleCaseConverter() {
 		uppercaseThreshold = UPPERCASE_THRESHOLD;
 		lowercaseThreshold = LOWERCASE_THRESHOLD;
+	}
+
+	/**
+	 * Returns a singleton instance that contains the default thresholds.
+	 * @return singleton instance
+	 */
+	public static TextFieldTitleCaseConverter getDefault() {
+		return DEFAULT;
 	}
 
 	/**
@@ -61,6 +74,7 @@ public class TextFieldTitleCaseConverter extends AbstractConverter<String> {
 	/**
 	 * Converts to the value used internally. This is where changes take place.
 	 */
+	@Override
 	public String convertToObject(final String value, final Locale locale) {
 		// 1. if no input, return null
 		if ((value == null) || Strings.isEmpty(value))
