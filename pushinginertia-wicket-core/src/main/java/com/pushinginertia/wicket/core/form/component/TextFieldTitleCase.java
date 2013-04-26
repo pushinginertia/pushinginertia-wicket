@@ -45,6 +45,6 @@ public class TextFieldTitleCase extends TextField<String> {
 
 	@Override
 	public <String> IConverter<String> getConverter(Class<String> type) {
-		return (IConverter<String>)new TextFieldTitleCaseConverter();
+		return (IConverter<String>)TextFieldTitleCaseConverter.getDefault();
 	}
 }
