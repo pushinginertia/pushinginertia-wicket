@@ -16,6 +16,7 @@
 package com.pushinginertia.wicket.core.form.behavior;
 
 import com.pushinginertia.commons.lang.CharUtils;
+import com.pushinginertia.commons.lang.StringUtils;
 import com.pushinginertia.commons.lang.ValidateAs;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -26,9 +27,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Performs validation on inputs for first and family names, ensuring that they are each at least two characters, that
- * one of those characters is not a period, that they are not the same values (regardless of case), and that they don't
- * contain characters that would not exist in a real name (such as punctuation).
+ * Performs validation on inputs for first and family names, ensuring that the following rules are followed.
+ * <ul>
+ *     <li>they are each at least two characters (unless CJK characters are present - see below)</li>
+ *     <li>one of the characters in each name is not a period</li>
+ *     <li>they are not the same values (regardless of case)</li>
+ *     <li>they don't contain characters that would not exist in a real name (such as punctuation)</li>
+ * </ul>
+ * If CJK (Chinese, Japanese, Korean) characters are entered, the minimum length of two characters is not enforced.
+ * This is because it's common for a name to appear as only one character in these languages.
  */
 public class RealFullNameValidator extends AbstractFormValidator {
 	private static final long serialVersionUID = 1L;
@@ -44,11 +51,10 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	private final TextField<String> familyName;
 
 	/**
-	 * Performs validation on inputs for first and family names, ensuring that they are each at least two characters, that
-	 * one of those characters is not a period, that they are not the same values (regardless of case), and that they don't
-	 * contain characters that would not exist in a real name (such as punctuation).
+	 * Performs validation on inputs for first and family names, ensuring that a set of rules are followed.
 	 * @param firstName input for the user's first name
 	 * @param familyName input for the user's family name
+	 * @see RealFullNameValidator
 	 */
 	public RealFullNameValidator(final TextField<String> firstName, final TextField<String> familyName) {
 		this.firstName = ValidateAs.notNull(firstName, "firstName");
@@ -108,9 +114,18 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	}
 
 	static boolean satisfiesLengthWithoutDot(final String input) {
-		// fail if input is less than 2 characters long
-		if (input.length() < 2) {
-			return false;
+		final boolean latin = StringUtils.isLatin(input);
+		if (latin) {
+			// fail if input is less than 2 characters long
+			if (input.length() < 2) {
+				return false;
+			}
+		} else {
+			// fail if input is less than 1 character long when non-latin characters are present
+			// (some languages can represent a name with only one character)
+			if (input.length() < 1) {
+				return false;
+			}
 		}
 
 		// fail if input is 2 characters but contains a dot

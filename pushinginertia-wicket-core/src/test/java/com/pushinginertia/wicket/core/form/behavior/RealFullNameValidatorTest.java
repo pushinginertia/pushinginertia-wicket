@@ -25,5 +25,7 @@ public class RealFullNameValidatorTest {
 		Assert.assertFalse(RealFullNameValidator.satisfiesLengthWithoutDot("d."));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("dx"));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("dxa"));
+		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("전"));
+		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("清"));
 	}
 }
