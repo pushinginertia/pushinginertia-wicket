@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pushinginertia.wicket.core.model;
+package com.pushinginertia.wicket.core.model.replacement;
 
 /**
  * Replaces email addresses found in a string with a link to a given page with some given text.

@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pushinginertia.wicket.core.model;
+package com.pushinginertia.wicket.core.model.replacement;
+
+import java.io.Serializable;
 
 /**
- * Replaces newlines entered by a user into &lt;br&gt; tags for HTML presentation.
+ * Defines the regular expression to match against a string and its replacement value for all matches in the string.
  */
-public class NewlineContentReplacer implements ContentReplacer {
-	private static final long serialVersionUID = 1L;
+public interface ContentReplacer extends Serializable {
+	/**
+	 * Pattern to search for (case insensitive).
+	 *
+	 * @return regex
+	 */
+	public String pattern();
 
-	public static final NewlineContentReplacer INSTANCE = new NewlineContentReplacer();
-
-	private NewlineContentReplacer() {}
-
-	@Override
-	public String pattern() {
-		return "\n";
-	}
-
-	@Override
-	public String replacement() {
-		return "<br/>";
-	}
+	/**
+	 * Replacement string to apply for matches of {@link #pattern()}. This could be a link to another page or just
+	 * some replacement text.
+	 *
+	 * @return non-null string
+	 */
+	public String replacement();
 }

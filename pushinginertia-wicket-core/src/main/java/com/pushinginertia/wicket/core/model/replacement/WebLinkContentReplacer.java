@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pushinginertia.wicket.core.model;
+package com.pushinginertia.wicket.core.model.replacement;
 
 /**
  * Replaces common ways that users might enter links to other sites with static replacement text.

@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pushinginertia.wicket.core.model;
+package com.pushinginertia.wicket.core.model.replacement;
 
+import com.pushinginertia.wicket.core.model.replacement.ContentReplacementModel;
+import com.pushinginertia.wicket.core.model.replacement.ContentReplacerList;
+import com.pushinginertia.wicket.core.model.replacement.EmailToLinkContentReplacer;
+import com.pushinginertia.wicket.core.model.replacement.WebLinkContentReplacer;
 import org.apache.wicket.model.Model;
 import org.junit.Assert;
 import org.junit.Test;

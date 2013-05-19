@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pushinginertia.wicket.core.model;
+package com.pushinginertia.wicket.core.model.replacement;
 
 import com.pushinginertia.commons.lang.StringUtils;
 import com.pushinginertia.commons.lang.ValidateAs;
