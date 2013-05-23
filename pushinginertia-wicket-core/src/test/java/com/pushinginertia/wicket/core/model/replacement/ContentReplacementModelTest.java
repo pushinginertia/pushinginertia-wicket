@@ -28,6 +28,8 @@ public class ContentReplacementModelTest {
 			new EmailToLinkContentReplacer("/contact", "email link");
 	private static final WebLinkContentReplacer WEB_LINK =
 			new WebLinkContentReplacer() {
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public String replacement() {
 					return "[web link]";
@@ -96,6 +98,11 @@ public class ContentReplacementModelTest {
 		model.setObject("check out my site at www.example.com, you'll like it");
 		Assert.assertEquals(
 				"check out my site at [web link], you'll like it",
+				model.getObject());
+
+		model.setObject("check out my site at www.example.com/path1/path2 - you'll like it");
+		Assert.assertEquals(
+				"check out my site at [web link] - you'll like it",
 				model.getObject());
 	}
 }

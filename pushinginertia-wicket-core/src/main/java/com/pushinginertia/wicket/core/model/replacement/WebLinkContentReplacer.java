@@ -24,7 +24,7 @@ public abstract class WebLinkContentReplacer implements ContentReplacer {
 	/**
 	 * This matches common links users might include in their inputs.
 	 */
-	public static final String LINK_REGEX = "(https?://([a-z0-9-]+\\.)+[a-z]{2,7}(/[^ \\n]*){0,1}|www\\.[a-z0-9-]+\\.[a-z]{2,7})";
+	public static final String LINK_REGEX = "(https?://([a-z0-9-]+\\.)+[a-z]{2,7}(/[^ \\n]*){0,1}|www\\.[a-z0-9-]+\\.[a-z]{2,7}(/[^ \\n]*){0,1})";
 
 	@Override
 	public String pattern() {
