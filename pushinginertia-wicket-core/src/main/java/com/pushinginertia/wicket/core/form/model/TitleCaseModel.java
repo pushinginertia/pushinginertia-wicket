@@ -65,7 +65,7 @@ public class TitleCaseModel extends Model<String> {
 							uppercaseThreshold,
 							lowercaseThreshold);
 			if (!value.equals(titleCase)) {
-				LOG.info("Converted input [" + value + "] to to title case [" + titleCase + "].");
+				LOG.info("Converted input [" + value + "] to title case [" + titleCase + "].");
 			}
 			nestedModel.setObject(titleCase);
 		}
