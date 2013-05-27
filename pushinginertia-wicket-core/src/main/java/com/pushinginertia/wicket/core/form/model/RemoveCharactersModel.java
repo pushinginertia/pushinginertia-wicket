@@ -47,7 +47,7 @@ public class RemoveCharactersModel extends Model<String> {
 		if (value == null) {
 			nestedModel.setObject(null);
 		} else {
-			final String stripped = StringUtils.removeChars(value, illegalChars);
+			final String stripped = StringUtils.removeChars(value, illegalChars).trim();
 			if (stripped.length() != value.length()) {
 				LOG.info("Stripped characters from string [" + value + "] to produce [" + stripped + "].");
 			}
