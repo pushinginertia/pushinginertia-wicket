@@ -15,7 +15,7 @@
  */
 package com.pushinginertia.wicket.core.behavior;
 
-import com.pushinginertia.commons.lang.ValidateAs;
+import com.pushinginertia.commons.core.validation.ValidateAs;
 import com.pushinginertia.wicket.core.RequestCycleUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;

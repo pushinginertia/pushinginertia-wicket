@@ -16,7 +16,7 @@
 package com.pushinginertia.wicket.core.model.replacement;
 
 import com.pushinginertia.commons.lang.StringUtils;
-import com.pushinginertia.commons.lang.ValidateAs;
+import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;

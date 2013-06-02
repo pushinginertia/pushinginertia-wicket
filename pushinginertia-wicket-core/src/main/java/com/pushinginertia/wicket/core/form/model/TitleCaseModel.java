@@ -17,7 +17,7 @@ package com.pushinginertia.wicket.core.form.model;
 
 import com.pushinginertia.commons.lang.NormalizeStringCaseUtils;
 import com.pushinginertia.commons.lang.StringUtils;
-import com.pushinginertia.commons.lang.ValidateAs;
+import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;

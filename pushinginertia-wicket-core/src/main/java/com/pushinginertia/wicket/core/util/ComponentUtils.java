@@ -15,7 +15,7 @@
  */
 package com.pushinginertia.wicket.core.util;
 
-import com.pushinginertia.commons.lang.ValidateAs;
+import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 

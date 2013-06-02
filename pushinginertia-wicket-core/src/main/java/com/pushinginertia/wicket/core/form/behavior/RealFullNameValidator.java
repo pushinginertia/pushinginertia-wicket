@@ -17,7 +17,7 @@ package com.pushinginertia.wicket.core.form.behavior;
 
 import com.pushinginertia.commons.lang.CharUtils;
 import com.pushinginertia.commons.lang.StringUtils;
-import com.pushinginertia.commons.lang.ValidateAs;
+import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;

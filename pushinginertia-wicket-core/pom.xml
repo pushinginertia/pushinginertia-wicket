@@ -29,6 +29,11 @@
     <dependencies>
         <dependency>
             <groupId>com.pushinginertia.commons</groupId>
+            <artifactId>pushinginertia-commons-core</artifactId>
+            <version>${pushinginertia-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pushinginertia.commons</groupId>
             <artifactId>pushinginertia-commons-web</artifactId>
             <version>${pushinginertia-commons.version}</version>
         </dependency>
