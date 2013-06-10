@@ -29,7 +29,8 @@ public final class ComponentUtils {
 
 	/**
 	 * A facade for {@link org.apache.wicket.Component#findParent( Class )} that fails if no parent component of the
-	 * given type exists.
+	 * given type exists. This should be called from {@link org.apache.wicket.Component#onInitialize()} and not in the
+	 * component's constructor.
 	 * @param callingComponent callingComponent making the call
 	 * @param parentClass type of the parent class
 	 * @param <Z> type of the parent class
