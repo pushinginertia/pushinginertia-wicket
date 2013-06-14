@@ -15,10 +15,6 @@
  */
 package com.pushinginertia.wicket.core.model.replacement;
 
-import com.pushinginertia.wicket.core.model.replacement.ContentReplacementModel;
-import com.pushinginertia.wicket.core.model.replacement.ContentReplacerList;
-import com.pushinginertia.wicket.core.model.replacement.EmailToLinkContentReplacer;
-import com.pushinginertia.wicket.core.model.replacement.WebLinkContentReplacer;
 import org.apache.wicket.model.Model;
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,6 +50,11 @@ public class ContentReplacementModelTest {
 				model.getObject());
 
 		model.setObject("<b>contact me</b> at user@gmail.com.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+
+		model.setObject("<b>contact me</b> at user at gmail.com.");
 		Assert.assertEquals(
 				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
 				model.getObject());

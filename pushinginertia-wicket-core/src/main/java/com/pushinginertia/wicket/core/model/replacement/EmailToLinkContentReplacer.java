@@ -19,11 +19,13 @@ package com.pushinginertia.wicket.core.model.replacement;
  * Replaces email addresses found in a string with a link to a given page with some given text.
  */
 public class EmailToLinkContentReplacer implements ContentReplacer {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * This matches real email addresses and also some common ways users change email addresses so that they're still
 	 * human readable but not parseable by bots.
 	 */
-	public static final String EMAIL_REGEX = "[a-z0-9._%+-]+\\s?@\\s?([a-z0-9-]+\\s?\\.\\s?)+[a-z]{2,4}";
+	public static final String EMAIL_REGEX = "[a-z0-9._%+-]+(\\s?@\\s?| at )([a-z0-9-]+\\s?\\.\\s?)+[a-z]{2,4}";
 
 	private final String linkRef;
 	private final String linkName;
