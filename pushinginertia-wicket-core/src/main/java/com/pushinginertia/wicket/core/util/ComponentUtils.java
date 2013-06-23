@@ -28,10 +28,10 @@ public final class ComponentUtils {
 	private ComponentUtils() {}
 
 	/**
-	 * A facade for {@link org.apache.wicket.Component#findParent( Class )} that fails if no parent component of the
+	 * A facade for {@link org.apache.wicket.Component#findParent(Class)} that fails if no parent component of the
 	 * given type exists. This should be called from {@link org.apache.wicket.Component#onInitialize()} and not in the
 	 * component's constructor.
-	 * @param callingComponent callingComponent making the call
+	 * @param callingComponent component making the call
 	 * @param parentClass type of the parent class
 	 * @param <Z> type of the parent class
 	 * @return never null
@@ -44,7 +44,7 @@ public final class ComponentUtils {
 		if (parentComponent == null) {
 			throw new IllegalStateException(
 					"Failed to find parent of type " + parentClass.getClass().getName() +
-					" from callingComponent. A common cause is that this method is called from a callingComponent's constructor instead of its onInitialize() method. Component: " +
+					" from callingComponent. A common cause is that this method is called from a component's constructor instead of its onInitialize() method. Component: " +
 					callingComponent);
 		}
 		return parentComponent;
