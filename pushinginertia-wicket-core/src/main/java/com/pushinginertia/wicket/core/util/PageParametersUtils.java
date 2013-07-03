@@ -15,16 +15,44 @@
  */
 package com.pushinginertia.wicket.core.util;
 
+import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.*;
+import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Some common logic when working with page parameters.
  */
 public final class PageParametersUtils {
 	public static final Logger LOG = LoggerFactory.getLogger(PageParametersUtils.class);
+
+	/**
+	 * Copies a {@link PageParameters} instance, pruning the key-value pairs for keys not given as parameters. In other
+	 * words, the copy will contain only key-value pairs where the key is specified as input to this method and the
+	 * key is given in the instance to copy.
+	 * @param pp instance to copy
+	 * @param keys list of keys to copy
+	 * @return a new instance containing a subset of the key-value pairs in the instance to copy
+	 */
+	public static PageParameters copySubset(final PageParameters pp, final String... keys) {
+		ValidateAs.notNull(pp, "pp");
+
+		final PageParameters ppCopy = new PageParameters();
+		final Set<String> ppKeys = pp.getNamedKeys();
+		for (final String key: keys) {
+			if (ppKeys.contains(key)) {
+				final List<StringValue> valueList = pp.getValues(key);
+				for (final StringValue value: valueList) {
+					ppCopy.add(key, value.toString());
+				}
+			}
+		}
+		return ppCopy;
+	}
 
 	/**
 	 * Retrieves an integer value from given page parameters, returning a default value if the name doesn't exist in the

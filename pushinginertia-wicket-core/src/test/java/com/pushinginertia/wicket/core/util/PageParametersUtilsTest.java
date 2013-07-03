@@ -16,10 +16,42 @@
 package com.pushinginertia.wicket.core.util;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.*;
 import org.junit.Assert;
 import org.junit.Test;
+import sun.tools.tree.AssignShiftLeftExpression;
 
 public class PageParametersUtilsTest {
+	@Test
+	public void copySubset() {
+		final PageParameters pp = new PageParameters();
+
+		final PageParameters pp0 = PageParametersUtils.copySubset(pp, "a", "b", "c");
+		Assert.assertEquals(0, pp0.getNamedKeys().size());
+
+		pp.add("a", "1");
+		final PageParameters pp1 = PageParametersUtils.copySubset(pp, "a", "b", "c");
+		Assert.assertEquals(1, pp1.getNamedKeys().size());
+		Assert.assertEquals(1, pp1.getValues("a").size());
+		Assert.assertEquals("1", pp1.get("a").toString());
+
+		pp.add("a", "2");
+		final PageParameters pp2 = PageParametersUtils.copySubset(pp, "a", "b", "c");
+		Assert.assertEquals(1, pp2.getNamedKeys().size());
+		Assert.assertEquals(2, pp2.getValues("a").size());
+		Assert.assertTrue(pp2.getValues("a").contains(StringValue.valueOf("1")));
+		Assert.assertTrue(pp2.getValues("a").contains(StringValue.valueOf("2")));
+
+		pp.add("b", "3");
+		final PageParameters pp3 = PageParametersUtils.copySubset(pp, "a", "b", "c");
+		Assert.assertEquals(2, pp3.getNamedKeys().size());
+		Assert.assertEquals(2, pp3.getValues("a").size());
+		Assert.assertTrue(pp3.getValues("a").contains(StringValue.valueOf("1")));
+		Assert.assertTrue(pp3.getValues("a").contains(StringValue.valueOf("2")));
+		Assert.assertEquals(1, pp3.getValues("b").size());
+		Assert.assertTrue(pp3.getValues("b").contains(StringValue.valueOf("3")));
+	}
+
 	@Test
 	public void getInt() {
 		final PageParameters pp = new PageParameters();
