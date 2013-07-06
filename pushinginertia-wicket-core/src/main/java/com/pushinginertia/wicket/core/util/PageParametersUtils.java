@@ -33,7 +33,7 @@ public final class PageParametersUtils {
 	/**
 	 * Copies a {@link PageParameters} instance, pruning the key-value pairs for keys not given as parameters. In other
 	 * words, the copy will contain only key-value pairs where the key is specified as input to this method and the
-	 * key is given in the instance to copy.
+	 * key exists in the instance to copy.
 	 * @param pp instance to copy
 	 * @param keys list of keys to copy
 	 * @return a new instance containing a subset of the key-value pairs in the instance to copy
