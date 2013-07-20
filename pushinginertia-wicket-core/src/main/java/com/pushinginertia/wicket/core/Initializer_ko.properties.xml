@@ -19,4 +19,5 @@
 <properties>
     <entry key="NotEqualPasswordInputValidator">새 비밀번호는 반드시 기존의 비밀번호와 다른것을 사용하셔야 합니다</entry>
     <entry key="PasswordMinimumLengthValidator">${minimum}자 이상 입력하셔야 합니다</entry>
+    <entry key="RealFullNameValidator">성과 이름을 정확하게 입력해주세요.</entry>
 </properties>
