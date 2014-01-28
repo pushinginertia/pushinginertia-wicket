@@ -18,14 +18,63 @@ package com.pushinginertia.wicket.core.util;
 import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
+import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import java.lang.Class;import java.lang.IllegalStateException;import java.lang.String;import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.Class;import java.lang.IllegalStateException;import java.lang.String;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstracts some common logic used in various wicket components.
  */
 public final class ComponentUtils {
 	private ComponentUtils() {}
+
+	private static final Map<String, Integer> PROTO_TO_PORT = new HashMap<String, Integer>();
+	static {
+		PROTO_TO_PORT.put("http", 80);
+		PROTO_TO_PORT.put("https", 443);
+	}
+
+	/**
+	 * Constructs the full URL to redirect to for a given target page and its parameters, with the option to override
+	 * the host name.
+	 * @param component component the call is being made from (used to obtain the container request)
+	 * @param hostName host name to use in the constructed URL
+	 * @param targetPage target page
+	 * @param pageParameters parameters for the target page (may be null)
+	 * @return full URL
+	 * @see org.apache.wicket.request.UrlRenderer#renderFullUrl(org.apache.wicket.request.Url)
+	 */
+	public static String constructRedirectUrl(
+			final Component component,
+			final String hostName,
+			final Class<? extends Page> targetPage,
+			final PageParameters pageParameters) {
+		ValidateAs.notNull(component, "component");
+		ValidateAs.notEmpty(hostName, "hostName");
+		ValidateAs.notNull(targetPage, "targetPage");
+
+		final HttpServletRequest req = (HttpServletRequest)component.getRequest().getContainerRequest();
+		final String scheme = req.getScheme();
+		final int port = req.getServerPort();
+
+		final String relativePath = component.urlFor(targetPage, pageParameters).toString();
+		final String absolutePath = RequestUtils.toAbsolutePath(req.getRequestURI(), relativePath);
+
+		final StringBuilder sb = new StringBuilder(scheme);
+		sb.append("://");
+		sb.append(hostName);
+		if (port > 0 && !PROTO_TO_PORT.get(scheme).equals(port)) {
+			sb.append(':').append(port);
+		}
+		sb.append(absolutePath);
+		return sb.toString();
+	}
 
 	/**
 	 * A facade for {@link org.apache.wicket.Component#findParent(Class)} that fails if no parent component of the
