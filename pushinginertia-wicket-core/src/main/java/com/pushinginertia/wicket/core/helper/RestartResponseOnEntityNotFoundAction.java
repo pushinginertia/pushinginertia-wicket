@@ -35,7 +35,7 @@ public class RestartResponseOnEntityNotFoundAction<E> extends LoadEntityAction<E
 	}
 
 	@Override
-	public final void onEntityNotFound() {
+	public final <I> void onEntityNotFound(final I input) {
 		throw new RestartResponseException(targetPage);
 	}
 }

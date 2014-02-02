@@ -92,7 +92,7 @@ public final class ComponentUtils {
 		final Z parentComponent = callingComponent.findParent(parentClass);
 		if (parentComponent == null) {
 			throw new IllegalStateException(
-					"Failed to find parent of type " + parentClass.getClass().getName() +
+					"Failed to find parent of type " + parentClass.getName() +
 					" from callingComponent. A common cause is that this method is called from a component's constructor instead of its onInitialize() method. Component: " +
 					callingComponent);
 		}
