@@ -20,10 +20,10 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.Class;import java.lang.IllegalStateException;import java.lang.String;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +38,58 @@ public final class ComponentUtils {
 	static {
 		PROTO_TO_PORT.put("http", 80);
 		PROTO_TO_PORT.put("https", 443);
+	}
+
+	/**
+	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
+	 * @param component component the call is being made from (used to obtain the container request)
+	 * @param hostName host name to use in the constructed URL
+	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
+	 * omitted
+	 * @return
+	 */
+	public static String constructUrl(
+		final Component component,
+		final String hostName,
+		final String absolutePath
+	) {
+		ValidateAs.notNull(component, "component");
+		return constructUrl(component.getRequest(), hostName, absolutePath);
+	}
+
+	/**
+	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
+	 * @param request object encapsulating the request to the server (used to obtain the container request)
+	 * @param hostName host name to use in the constructed URL
+	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
+	 * omitted
+	 * @return
+	 */
+	public static String constructUrl(
+		final Request request,
+		final String hostName,
+		final String absolutePath
+	) {
+		ValidateAs.notNull(request, "request");
+		ValidateAs.notEmpty(hostName, "hostName");
+
+		final HttpServletRequest req = (HttpServletRequest)request.getContainerRequest();
+		final String scheme = req.getScheme();
+		final int port = req.getServerPort();
+
+		final StringBuilder sb = new StringBuilder(scheme);
+		sb.append("://");
+		sb.append(hostName);
+		if (port > 0 && !PROTO_TO_PORT.get(scheme).equals(port)) {
+			sb.append(':').append(port);
+		}
+		if (absolutePath != null && absolutePath.length() > 0) {
+			if (!absolutePath.startsWith("/")) {
+				sb.append('/');
+			}
+			sb.append(absolutePath);
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -56,24 +108,14 @@ public final class ComponentUtils {
 			final Class<? extends Page> targetPage,
 			final PageParameters pageParameters) {
 		ValidateAs.notNull(component, "component");
-		ValidateAs.notEmpty(hostName, "hostName");
 		ValidateAs.notNull(targetPage, "targetPage");
 
 		final HttpServletRequest req = (HttpServletRequest)component.getRequest().getContainerRequest();
-		final String scheme = req.getScheme();
-		final int port = req.getServerPort();
 
 		final String relativePath = component.urlFor(targetPage, pageParameters).toString();
 		final String absolutePath = RequestUtils.toAbsolutePath(req.getRequestURI(), relativePath);
 
-		final StringBuilder sb = new StringBuilder(scheme);
-		sb.append("://");
-		sb.append(hostName);
-		if (port > 0 && !PROTO_TO_PORT.get(scheme).equals(port)) {
-			sb.append(':').append(port);
-		}
-		sb.append(absolutePath);
-		return sb.toString();
+		return constructUrl(component, hostName, absolutePath);
 	}
 
 	/**
