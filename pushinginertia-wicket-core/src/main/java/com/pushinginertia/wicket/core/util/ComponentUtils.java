@@ -43,6 +43,30 @@ public final class ComponentUtils {
 	/**
 	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
 	 * @param component component the call is being made from (used to obtain the container request)
+	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
+	 * omitted
+	 * @return
+	 */
+	public static String constructUrl(final Component component, final String absolutePath) {
+		ValidateAs.notNull(component, "component");
+		return constructUrl(component.getRequest(), absolutePath);
+	}
+
+	/**
+	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
+	 * @param request object encapsulating the request to the server (used to obtain the container request)
+	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
+	 * omitted
+	 * @return
+	 */
+	public static String constructUrl(final Request request, final String absolutePath) {
+		final String hostName = request.getUrl().getHost();
+		return constructUrl(request, hostName, absolutePath);
+	}
+
+	/**
+	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
+	 * @param component component the call is being made from (used to obtain the container request)
 	 * @param hostName host name to use in the constructed URL
 	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
 	 * omitted

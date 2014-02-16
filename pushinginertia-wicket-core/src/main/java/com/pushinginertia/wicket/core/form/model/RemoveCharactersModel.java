@@ -32,6 +32,12 @@ public class RemoveCharactersModel extends Model<String> {
 	private final IModel<String> nestedModel;
 	private final char[] illegalChars;
 
+	/**
+	 * A model that can be attached to a form input, which will strip a given list characters from the input entered by
+	 * the user. This wraps another model that represents the string that the form input will be assigned to.
+	 * @param model model containing the user's input
+	 * @param illegalChars characters to strip
+	 */
 	public RemoveCharactersModel(final IModel<String> model, final char[] illegalChars) {
 		this.nestedModel = model;
 		this.illegalChars = illegalChars;
