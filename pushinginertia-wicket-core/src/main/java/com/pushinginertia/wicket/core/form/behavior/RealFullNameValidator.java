@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013 Pushing Inertia
+/* Copyright (c) 2011-2014 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,9 @@
  */
 package com.pushinginertia.wicket.core.form.behavior;
 
+import com.pushinginertia.commons.core.validation.ValidateAs;
 import com.pushinginertia.commons.lang.CharUtils;
 import com.pushinginertia.commons.lang.StringUtils;
-import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
@@ -25,6 +25,10 @@ import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Performs validation on inputs for first and family names, ensuring that the following rules are followed.
@@ -46,6 +50,14 @@ public class RealFullNameValidator extends AbstractFormValidator {
 			 '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
 			 '+', '_', '=', '<', '>', '?', '/', ':', ';', '"',
 			 '[', ']', '{', '}', '|', '~', '\\'};
+	private static final Set<String> TITLES = new HashSet<String>();
+	static {
+		TITLES.add("MR");
+		TITLES.add("MRS");
+		TITLES.add("MS");
+		TITLES.add("MISS");
+		TITLES.add("DR");
+	}
 
 	private final TextField<String> firstName;
 	private final TextField<String> familyName;
@@ -95,6 +107,12 @@ public class RealFullNameValidator extends AbstractFormValidator {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 		}
+
+		// 4. check for title in the first name such as "Mr." or "Mrs."
+		if (containsTitle(firstName)) {
+			LOG.info(toLogString(form, firstName));
+			error(firstName);
+		}
 	}
 
 	private String toLogString(final Form form, final TextField<String> errorComponent) {
@@ -107,6 +125,22 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		final String id = tf.getId();
 		final String input = tf.getInput();
 		return id + "=[" + input + ']';
+	}
+
+	private static boolean containsTitle(final TextField<String> tf) {
+		return containsTitle(tf.getInput());
+	}
+
+	static boolean containsTitle(final String input) {
+		final String input2 = input.toUpperCase();
+		final int idx = input2.indexOf('.');
+		if (idx < 0) {
+			return TITLES.contains(input2);
+		}
+		if (idx + 1 == input2.length()) {
+			return TITLES.contains(input2.substring(0, idx));
+		}
+		return false;
 	}
 
 	private static boolean satisfiesLengthWithoutDot(final TextField<String> tf) {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013 Pushing Inertia
+/* Copyright (c) 2011-2014 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,22 @@ import org.junit.Test;
 
 public class RealFullNameValidatorTest {
 	@Test
-	public void testSatisfiesLengthWithoutDot() {
+	public void satisfiesLengthWithoutDot() {
 		Assert.assertFalse(RealFullNameValidator.satisfiesLengthWithoutDot("d"));
 		Assert.assertFalse(RealFullNameValidator.satisfiesLengthWithoutDot("d."));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("dx"));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("dxa"));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("전"));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("清"));
+	}
+
+	@Test
+	public void containsTitle() {
+		Assert.assertFalse(RealFullNameValidator.containsTitle("Mr.x"));
+		Assert.assertTrue(RealFullNameValidator.containsTitle("Mr."));
+		Assert.assertTrue(RealFullNameValidator.containsTitle("Mr"));
+		Assert.assertTrue(RealFullNameValidator.containsTitle("Mrs."));
+		Assert.assertTrue(RealFullNameValidator.containsTitle("Mrs"));
+		Assert.assertFalse(RealFullNameValidator.containsTitle("Bob"));
 	}
 }
