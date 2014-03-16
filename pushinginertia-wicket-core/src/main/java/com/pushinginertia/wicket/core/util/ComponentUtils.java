@@ -22,6 +22,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -32,13 +34,15 @@ import java.util.Map;
  * Abstracts some common logic used in various wicket components.
  */
 public final class ComponentUtils {
-	private ComponentUtils() {}
+	private static final Logger LOG = LoggerFactory.getLogger(ComponentUtils.class);
 
 	private static final Map<String, Integer> PROTO_TO_PORT = new HashMap<String, Integer>();
 	static {
 		PROTO_TO_PORT.put("http", 80);
 		PROTO_TO_PORT.put("https", 443);
 	}
+
+	private ComponentUtils() {}
 
 	/**
 	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
@@ -137,7 +141,19 @@ public final class ComponentUtils {
 		final HttpServletRequest req = (HttpServletRequest)component.getRequest().getContainerRequest();
 
 		final String relativePath = component.urlFor(targetPage, pageParameters).toString();
-		final String absolutePath = RequestUtils.toAbsolutePath(req.getRequestURI(), relativePath);
+		final String requestURI = req.getRequestURI();
+		final String absolutePath;
+		try {
+			absolutePath = RequestUtils.toAbsolutePath(requestURI, relativePath);
+		} catch (final RuntimeException e) {
+			// this call can throw StringIndexOutOfBoundsException: String index out of range: -1
+			// it seems to be a wicket bug but I need to log the input to figure out how to reproduce it
+			LOG.error(
+					"Error constructing absolute path for inputs requestPath=[" + requestURI +
+					"], relativePagePath=[" + relativePath + "]",
+					e);
+			throw e;
+		}
 
 		return constructUrl(component, hostName, absolutePath);
 	}
