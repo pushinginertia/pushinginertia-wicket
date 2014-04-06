@@ -142,9 +142,18 @@ public final class ComponentUtils {
 
 		final String relativePath = component.urlFor(targetPage, pageParameters).toString();
 		final String requestURI = req.getRequestURI();
-		final String absolutePath;
+		String absolutePath;
 		try {
 			absolutePath = RequestUtils.toAbsolutePath(requestURI, relativePath);
+		} catch (final StringIndexOutOfBoundsException e) {
+			// sometimes the wicket method throws an exception when the input is something like:
+			// requestPath="/404", relativePagePath="../../../page-name"
+			// strip all leading occurrences of "../" from the relativePath
+			final StringBuilder sb = new StringBuilder(relativePath);
+			while (sb.indexOf("../") == 0) {
+				sb.delete(0, 3);
+			}
+			absolutePath = sb.toString();
 		} catch (final RuntimeException e) {
 			// this call can throw StringIndexOutOfBoundsException: String index out of range: -1
 			// it seems to be a wicket bug but I need to log the input to figure out how to reproduce it
