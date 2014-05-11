@@ -58,4 +58,13 @@ public class RealFullNameValidatorTest {
 		Assert.assertFalse(RealFullNameValidator.isDomain("Doe"));
 		Assert.assertFalse(RealFullNameValidator.isDomain("John Jr."));
 	}
+
+	@Test
+	public void exceedsOneCharLimits() {
+		Assert.assertFalse(RealFullNameValidator.exceedsOneCharLimits("John"));
+		Assert.assertFalse(RealFullNameValidator.exceedsOneCharLimits("John & Jane"));
+		Assert.assertFalse(RealFullNameValidator.exceedsOneCharLimits("John / Jane"));
+		Assert.assertFalse(RealFullNameValidator.exceedsOneCharLimits("John & Jane / Jill"));
+		Assert.assertTrue(RealFullNameValidator.exceedsOneCharLimits("John & Jane & Jill"));
+	}
 }

@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
  *     <li>common titles like "Mr." or "Mrs." aren't present</li>
  *     <li>names cannot contain all vowels or all consonants</li>
  *     <li>domain names are not permitted</li>
+ *     <li>ampersand and slash are permitted but only once</li>
  * </ul>
  * If CJK (Chinese, Japanese, Korean) characters are entered, the minimum length of two characters is not enforced.
  * This is because it's common for a name to appear as only one character in these languages.
@@ -53,9 +54,13 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	 */
 	private static final char[] ILLEGAL_CHARS =
 			{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			 '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-			 '+', '_', '=', '<', '>', '?', '/', ':', ';', '"',
-			 '[', ']', '{', '}', '|', '~', '\\'};
+			 '!', '@', '#', '$', '%', '^', '*', '(', ')', '+',
+			 '_', '=', '<', '>', '?', ':', ';', '"', '[', ']',
+			 '{', '}', '|', '~', '\\'};
+	/**
+	 * Characters that can appear at most once in a name.
+	 */
+	private static final char[] MAX_ONE_CHARS = {'&', '/',};
 	private static final Set<String> TITLES = new HashSet<String>();
 	static {
 		TITLES.add("MR");
@@ -144,6 +149,18 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		if (isDomain(familyName.getInput())) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
+			return;
+		}
+
+		// 7. check for one character limits
+		if (exceedsOneCharLimits(firstName.getInput())) {
+			LOG.info(toLogString(form, firstName));
+			error(firstName);
+			return;
+		}
+		if (exceedsOneCharLimits(familyName.getInput())) {
+			LOG.info(toLogString(form, familyName));
+			error(familyName);
 		}
 	}
 
@@ -163,9 +180,14 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		return containsTitle(tf.getInput());
 	}
 
-	private static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
-	private static final char[] CONSONANTS =
-			{'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'};
+	static boolean exceedsOneCharLimits(final String input) {
+		for (final char c: MAX_ONE_CHARS) {
+			if (StringUtils.charFrequencyInString(c, input) > 1) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * A string with a dot followed by a variable number of letters would be considered a domain.
@@ -175,6 +197,10 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	static boolean isDomain(final String input) {
 		return Pattern.matches(".*[a-z0-9]\\.[a-z]{2}.*", input);
 	}
+
+	private static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
+	private static final char[] CONSONANTS =
+			{'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'};
 
 	/**
 	 * Checks if all characters in the input are consonants or vowels. 'Y' is considered neither so that a name like
