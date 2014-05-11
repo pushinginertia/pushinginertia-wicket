@@ -48,4 +48,14 @@ public class RealFullNameValidatorTest {
 		Assert.assertTrue(RealFullNameValidator.allVowelsOrConsonants("ae"));
 		Assert.assertTrue(RealFullNameValidator.allVowelsOrConsonants("aáeéiíoóöőuúüű"));
 	}
+
+	@Test
+	public void isDomain() {
+		Assert.assertTrue(RealFullNameValidator.isDomain("example.com"));
+		Assert.assertTrue(RealFullNameValidator.isDomain("example.co.uk"));
+		Assert.assertTrue(RealFullNameValidator.isDomain("example.website"));
+		Assert.assertFalse(RealFullNameValidator.isDomain("John"));
+		Assert.assertFalse(RealFullNameValidator.isDomain("Doe"));
+		Assert.assertFalse(RealFullNameValidator.isDomain("John Jr."));
+	}
 }

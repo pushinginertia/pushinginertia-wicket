@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Performs validation on inputs for first and family names, ensuring that the following rules are followed.
@@ -38,6 +39,7 @@ import java.util.Set;
  *     <li>they don't contain characters that would not exist in a real name (such as punctuation)</li>
  *     <li>common titles like "Mr." or "Mrs." aren't present</li>
  *     <li>names cannot contain all vowels or all consonants</li>
+ *     <li>domain names are not permitted</li>
  * </ul>
  * If CJK (Chinese, Japanese, Korean) characters are entered, the minimum length of two characters is not enforced.
  * This is because it's common for a name to appear as only one character in these languages.
@@ -126,7 +128,20 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		if (allVowelsOrConsonants(firstName.getInput())) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
-		} else if (allVowelsOrConsonants(familyName.getInput())) {
+			return;
+		}
+		if (allVowelsOrConsonants(familyName.getInput())) {
+			LOG.info(toLogString(form, familyName));
+			error(familyName);
+		}
+
+		// 6. reject domains
+		if (isDomain(firstName.getInput())) {
+			LOG.info(toLogString(form, firstName));
+			error(firstName);
+			return;
+		}
+		if (isDomain(familyName.getInput())) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 		}
@@ -151,6 +166,15 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	private static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
 	private static final char[] CONSONANTS =
 			{'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'};
+
+	/**
+	 * A string with a dot followed by a variable number of letters would be considered a domain.
+	 * @param input string to check
+	 * @return true iff the input looks like a domain
+	 */
+	static boolean isDomain(final String input) {
+		return Pattern.matches(".*[a-z0-9]\\.[a-z]{2}.*", input);
+	}
 
 	/**
 	 * Checks if all characters in the input are consonants or vowels. 'Y' is considered neither so that a name like
