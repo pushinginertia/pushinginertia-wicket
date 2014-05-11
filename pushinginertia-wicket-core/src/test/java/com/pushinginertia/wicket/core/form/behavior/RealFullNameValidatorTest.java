@@ -38,4 +38,14 @@ public class RealFullNameValidatorTest {
 		Assert.assertTrue(RealFullNameValidator.containsTitle("Mrs"));
 		Assert.assertFalse(RealFullNameValidator.containsTitle("Bob"));
 	}
+
+	@Test
+	public void allVowelsOrConsonants() {
+		Assert.assertFalse(RealFullNameValidator.allVowelsOrConsonants("Ly"));
+		Assert.assertFalse(RealFullNameValidator.allVowelsOrConsonants("Ay"));
+		Assert.assertTrue(RealFullNameValidator.allVowelsOrConsonants("HH"));
+		Assert.assertFalse(RealFullNameValidator.allVowelsOrConsonants("abc"));
+		Assert.assertTrue(RealFullNameValidator.allVowelsOrConsonants("ae"));
+		Assert.assertTrue(RealFullNameValidator.allVowelsOrConsonants("aáeéiíoóöőuúüű"));
+	}
 }

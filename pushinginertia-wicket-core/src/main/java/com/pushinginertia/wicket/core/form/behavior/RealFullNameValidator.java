@@ -26,7 +26,6 @@ import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +36,8 @@ import java.util.Set;
  *     <li>one of the characters in each name is not a period</li>
  *     <li>they are not the same values (regardless of case)</li>
  *     <li>they don't contain characters that would not exist in a real name (such as punctuation)</li>
+ *     <li>common titles like "Mr." or "Mrs." aren't present</li>
+ *     <li>names cannot contain all vowels or all consonants</li>
  * </ul>
  * If CJK (Chinese, Japanese, Korean) characters are entered, the minimum length of two characters is not enforced.
  * This is because it's common for a name to appear as only one character in these languages.
@@ -45,6 +46,9 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(RealFullNameValidator.class);
 
+	/**
+	 * Dot (.) is okay as it may be written in a name like "John Jr."
+	 */
 	private static final char[] ILLEGAL_CHARS =
 			{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 			 '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
@@ -103,15 +107,28 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		if (CharUtils.inCharArray(firstName.getInput(), ILLEGAL_CHARS) >= 0) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
-		} else if (CharUtils.inCharArray(familyName.getInput(), ILLEGAL_CHARS) >= 0) {
+			return;
+		}
+		if (CharUtils.inCharArray(familyName.getInput(), ILLEGAL_CHARS) >= 0) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
+			return;
 		}
 
 		// 4. check for title in the first name such as "Mr." or "Mrs."
 		if (containsTitle(firstName)) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
+			return;
+		}
+
+		// 5. check for all vowels or consonants in the name
+		if (allVowelsOrConsonants(firstName.getInput())) {
+			LOG.info(toLogString(form, firstName));
+			error(firstName);
+		} else if (allVowelsOrConsonants(familyName.getInput())) {
+			LOG.info(toLogString(form, familyName));
+			error(familyName);
 		}
 	}
 
@@ -129,6 +146,40 @@ public class RealFullNameValidator extends AbstractFormValidator {
 
 	private static boolean containsTitle(final TextField<String> tf) {
 		return containsTitle(tf.getInput());
+	}
+
+	private static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
+	private static final char[] CONSONANTS =
+			{'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'};
+
+	/**
+	 * Checks if all characters in the input are consonants or vowels. 'Y' is considered neither so that a name like
+	 * "Ly" or "Ay" would not return true.
+	 * @param input string to check
+	 * @return true iff all characters are vowels or consonants
+	 */
+	static boolean allVowelsOrConsonants(final String input) {
+		// 1. strip out accents for the purpose of comparison
+		final String strippedInput = org.apache.commons.lang3.StringUtils.stripAccents(input);
+
+		// 2. count the vowels and consonants
+		int vowels = 0;
+		int consonants = 0;
+		int either = 0;
+		for (char c: strippedInput.toLowerCase().toCharArray()) {
+			if (CharUtils.inCharArray(c, VOWELS) >= 0) {
+				vowels++;
+				either++;
+			} else if (CharUtils.inCharArray(c, CONSONANTS) >= 0) {
+				consonants++;
+				either++;
+			} else if (c != ' ' && c != '.') {
+				either++;
+			}
+		}
+
+		// 3. see if all characters other than spaces/periods are vowels or consonants
+		return vowels == either || consonants == either;
 	}
 
 	static boolean containsTitle(final String input) {
