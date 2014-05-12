@@ -64,4 +64,30 @@ public class PageParametersUtilsTest {
 		pp.set("k", "1");
 		Assert.assertEquals(1, PageParametersUtils.getInt(pp, "k", 0));
 	}
+
+	public enum TestEnum {
+		VALUE_1,
+		SECOND_VALUE,
+		VALUE_NUMBER_3,
+		FOUR
+	}
+
+	@Test
+	public void getEnum() {
+		final PageParameters pp = new PageParameters();
+
+		Assert.assertEquals(TestEnum.VALUE_1, PageParametersUtils.getEnum(pp, "k", TestEnum.class, TestEnum.VALUE_1));
+
+		pp.set("k", "");
+		Assert.assertEquals(TestEnum.VALUE_1, PageParametersUtils.getEnum(pp, "k", TestEnum.class, TestEnum.VALUE_1));
+		pp.set("k", "x");
+		Assert.assertEquals(TestEnum.VALUE_1, PageParametersUtils.getEnum(pp, "k", TestEnum.class, TestEnum.VALUE_1));
+
+		pp.set("k", "four");
+		Assert.assertEquals(TestEnum.FOUR, PageParametersUtils.getEnum(pp, "k", TestEnum.class, TestEnum.VALUE_1));
+		pp.set("k", "Four");
+		Assert.assertEquals(TestEnum.FOUR, PageParametersUtils.getEnum(pp, "k", TestEnum.class, TestEnum.VALUE_1));
+		pp.set("k", "FOUR");
+		Assert.assertEquals(TestEnum.FOUR, PageParametersUtils.getEnum(pp, "k", TestEnum.class, TestEnum.VALUE_1));
+	}
 }
