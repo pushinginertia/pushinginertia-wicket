@@ -19,7 +19,6 @@ import com.pushinginertia.commons.core.validation.ValidateAs;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.Response;
 
 /**
@@ -30,37 +29,27 @@ public class InputDecoratorWithLabel extends InputDecorator {
 	private static final long serialVersionUID = 1L;
 	public static final ComponentPlacement LABEL_PLACEMENT_DEFAULT = ComponentPlacement.BEFORE;
 
-	private final String labelResourceKey;
-	private final IModel model;
 	private final ComponentPlacement labelPlacement;
 	private String labelClass = "top";
 
-	public InputDecoratorWithLabel(final int maxLength, final String labelResourceKey) {
-		super(maxLength);
-		this.labelResourceKey = ValidateAs.notNull(labelResourceKey, "labelResourceKey");
-		this.model = null;
-		this.labelPlacement = LABEL_PLACEMENT_DEFAULT;
+	private IModel<String> labelModel;
+
+	public InputDecoratorWithLabel(final IModel<String> model) {
+		this(0, model, LABEL_PLACEMENT_DEFAULT);
 	}
 
-	public InputDecoratorWithLabel(final int maxLength, final String labelResourceKey, final ComponentPlacement labelPlacement) {
+	public InputDecoratorWithLabel(final IModel<String> model, final ComponentPlacement labelPlacement) {
+		this(0, model, labelPlacement);
+	}
+
+	public InputDecoratorWithLabel(final int maxLength, final IModel<String> model) {
+		this(maxLength, model, LABEL_PLACEMENT_DEFAULT);
+	}
+
+	public InputDecoratorWithLabel(final int maxLength, final IModel<String> model, final ComponentPlacement labelPlacement) {
 		super(maxLength);
-		this.labelResourceKey = ValidateAs.notNull(labelResourceKey, "labelResourceKey");
-		this.model = null;
+		this.labelModel = ValidateAs.notNull(model, "model");
 		this.labelPlacement = ValidateAs.notNull(labelPlacement, "labelPlacement");
-	}
-
-	public InputDecoratorWithLabel(final String labelResourceKey) {
-		super(0);
-		this.labelResourceKey = ValidateAs.notNull(labelResourceKey, "labelResourceKey");
-		this.model = null;
-		this.labelPlacement = LABEL_PLACEMENT_DEFAULT;
-	}
-
-	public InputDecoratorWithLabel(final String labelResourceKey, final IModel model) {
-		super(0);
-		this.labelResourceKey = ValidateAs.notNull(labelResourceKey, "labelResourceKey");
-		this.model = model;
-		this.labelPlacement = LABEL_PLACEMENT_DEFAULT;
 	}
 
 	public final String getLabelClass() {
@@ -79,11 +68,7 @@ public class InputDecoratorWithLabel extends InputDecorator {
 
 	private void renderLabel(final FormComponent<?> fc) {
 		final Response r = fc.getResponse();
-
-		final String label =
-				(model == null)
-						? new StringResourceModel(labelResourceKey, fc.getModel()).getString()
-						: new StringResourceModel(labelResourceKey, model).getString();
+		final String label = labelModel.getObject();
 
 		r.write("<label for=\"");
 		r.write(fc.getMarkupId());
