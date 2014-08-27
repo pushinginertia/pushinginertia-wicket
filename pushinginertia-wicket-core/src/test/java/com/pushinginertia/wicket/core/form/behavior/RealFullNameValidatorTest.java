@@ -67,4 +67,12 @@ public class RealFullNameValidatorTest {
 		Assert.assertFalse(RealFullNameValidator.exceedsOneCharLimits("John & Jane / Jill"));
 		Assert.assertTrue(RealFullNameValidator.exceedsOneCharLimits("John & Jane & Jill"));
 	}
+
+	@Test
+	public void firstAndLastAreLetters() {
+		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters("C-"));
+		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters("-C"));
+		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("Cabc"));
+		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("Ca"));
+	}
 }

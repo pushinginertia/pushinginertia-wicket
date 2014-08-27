@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
  *     <li>names cannot contain all vowels or all consonants</li>
  *     <li>domain names are not permitted</li>
  *     <li>ampersand and slash are permitted but only once</li>
+ *     <li>first and last character must be a letter</li>
  * </ul>
  * If CJK (Chinese, Japanese, Korean) characters are entered, the minimum length of two characters is not enforced.
  * This is because it's common for a name to appear as only one character in these languages.
@@ -161,6 +162,18 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		if (exceedsOneCharLimits(familyName.getInput())) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
+			return;
+		}
+
+		// 8. check that first and last characters are letters
+		if (!firstAndLastAreLetters(firstName.getInput())) {
+			LOG.info(toLogString(form, firstName));
+			error(firstName);
+			return;
+		}
+		if (!firstAndLastAreLetters(familyName.getInput())) {
+			LOG.info(toLogString(form, familyName));
+			error(familyName);
 		}
 	}
 
@@ -174,6 +187,18 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		final String id = tf.getId();
 		final String input = tf.getInput();
 		return id + "=[" + input + ']';
+	}
+
+	static boolean firstAndLastAreLetters(final String input) {
+		if (input.length() == 0) {
+			return true;
+		}
+		final char first = Character.toLowerCase(input.charAt(0));
+		if (first < 'a' || first > 'z') {
+			return false;
+		}
+		final char last = Character.toLowerCase(input.charAt(input.length() - 1));
+		return (last >= 'a' && last <= 'z');
 	}
 
 	private static boolean containsTitle(final TextField<String> tf) {
