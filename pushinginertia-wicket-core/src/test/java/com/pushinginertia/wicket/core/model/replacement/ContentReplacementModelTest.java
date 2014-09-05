@@ -31,6 +31,8 @@ public class ContentReplacementModelTest {
 					return "[web link]";
 				}
 			};
+	public static final NumberSequenceContentReplacer NUMBER_TO_LINK =
+			new NumberSequenceContentReplacer(7, "/contact", "number link");
 
 	@Test
 	public void emailReplacer() {
@@ -86,6 +88,25 @@ public class ContentReplacementModelTest {
 		model.setObject("<b>contact me</b> at user@gmail.com.");
 		Assert.assertEquals(
 				"&lt;b&gt;contact me&lt;/b&gt; at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+	}
+
+	@Test
+	public void numberToLink() {
+		final ContentReplacerList.Builder builder = new ContentReplacerList.Builder();
+		builder.add(NUMBER_TO_LINK);
+
+		final ContentReplacementModel model =
+				new ContentReplacementModel(
+						Model.of("you can <b>contact me</b> at 123-4567 or (123) 456-7890 blah blah blah."),
+						builder.build());
+		Assert.assertEquals(
+				"you can <b>contact me</b> at <a href=\"/contact\">number link</a> or <a href=\"/contact\">number link</a> blah blah blah.",
+				model.getObject());
+
+		model.setObject("<b>contact me</b> at (zero one two) three four five, six seven eight nine.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">number link</a>.",
 				model.getObject());
 	}
 
