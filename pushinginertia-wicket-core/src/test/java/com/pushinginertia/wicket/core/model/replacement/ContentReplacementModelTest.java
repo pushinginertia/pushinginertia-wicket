@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013 Pushing Inertia
+/* Copyright (c) 2011-2014 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,6 +55,16 @@ public class ContentReplacementModelTest {
 				model.getObject());
 
 		model.setObject("<b>contact me</b> at user at gmail.com.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+
+		model.setObject("<b>contact me</b> at user  at  gmail.com.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+
+		model.setObject("<b>contact me</b> at user at gmail dot com.");
 		Assert.assertEquals(
 				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
 				model.getObject());

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013 Pushing Inertia
+/* Copyright (c) 2011-2014 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ public class EmailToLinkContentReplacer implements ContentReplacer {
 	 * This matches real email addresses and also some common ways users change email addresses so that they're still
 	 * human readable but not parseable by bots.
 	 */
-	public static final String EMAIL_REGEX = "[a-z0-9._%+-]+(\\s?@\\s?| at )([a-z0-9-]+\\s?\\.\\s?)+[a-z]{2,4}";
+	public static final String EMAIL_REGEX = "[a-z0-9._%+-]+(\\s*@\\s*| +at +)([a-z0-9-]+(\\s?\\.\\s?| +dot +))+[a-z]{2,4}";
 
 	private final String linkRef;
 	private final String linkName;
