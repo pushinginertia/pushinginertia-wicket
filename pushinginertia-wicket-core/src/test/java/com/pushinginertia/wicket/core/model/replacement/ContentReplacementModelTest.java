@@ -98,7 +98,7 @@ public class ContentReplacementModelTest {
 
 		final ContentReplacementModel model =
 				new ContentReplacementModel(
-						Model.of("you can <b>contact me</b> at 123-4567 or (123) 456-7890 blah blah blah."),
+						Model.of("you can <b>contact me</b> at 123.4567 or (123) 456-7890 blah blah blah."),
 						builder.build());
 		Assert.assertEquals(
 				"you can <b>contact me</b> at <a href=\"/contact\">number link</a> or <a href=\"/contact\">number link</a> blah blah blah.",

@@ -26,7 +26,7 @@ public class NumberSequenceContentReplacer implements ContentReplacer {
 	 * Matches a sequence of numbers that might also be written as words with various punctuation in between.
 	 */
 	private static final String BASE_REGEX_PRE =
-			"\\(?([0-9]|zero|one|two|three|four|five|six|seven|eight|nine)([\\(\\), -]*([0-9]|zero|one|two|three|four|five|six|seven|eight|nine)){";
+			"\\(?([0-9]|zero|one|two|three|four|five|six|seven|eight|nine)([\\(\\)\\., -]*([0-9]|zero|one|two|three|four|five|six|seven|eight|nine)){";
 	private static final String BASE_REGEX_POST = ",}";
 
 	private final String linkRef;
