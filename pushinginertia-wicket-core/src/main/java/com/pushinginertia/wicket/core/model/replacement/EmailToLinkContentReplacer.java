@@ -44,4 +44,9 @@ public class EmailToLinkContentReplacer implements ContentReplacer {
 	public String replacement() {
 		return "<a href=\"" + linkRef + "\">" + linkName + "</a>";
 	}
+
+	@Override
+	public String toString() {
+		return "EmailToLinkContentReplacer{" + "linkRef=" + linkRef + ", linkName=" + linkName + '}';
+	}
 }
