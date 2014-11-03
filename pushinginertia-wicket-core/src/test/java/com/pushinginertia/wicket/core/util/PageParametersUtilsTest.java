@@ -19,7 +19,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.*;
 import org.junit.Assert;
 import org.junit.Test;
-import sun.tools.tree.AssignShiftLeftExpression;
 
 public class PageParametersUtilsTest {
 	@Test
