@@ -98,6 +98,10 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <!-- This is required for backward compatibility with Java < 8 -->
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
