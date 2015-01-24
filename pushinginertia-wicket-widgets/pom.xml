@@ -6,7 +6,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.pushinginertia.wicket</groupId>
     <artifactId>pushinginertia-wicket-widgets</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -16,13 +15,6 @@
             <groupId>com.pushinginertia.commons</groupId>
             <artifactId>pushinginertia-commons-core</artifactId>
             <version>${pushinginertia-commons.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
