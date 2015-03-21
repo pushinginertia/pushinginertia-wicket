@@ -25,6 +25,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -173,10 +174,13 @@ public final class ComponentUtils {
 	 * component's constructor.
 	 * @param callingComponent component making the call
 	 * @param parentClass type of the parent class
-	 * @param <Z> type of the parent class
-	 * @return never null
+	 * @param <Z> Type of the parent class.
+	 * @return Parent component.
 	 */
-	public static <Z> Z findParentOrDie(final Component callingComponent, final Class<Z> parentClass) {
+	@Nonnull
+	public static <Z> Z findParentOrDie(
+			final @Nonnull Component callingComponent,
+			final @Nonnull Class<Z> parentClass) {
 		ValidateAs.notNull(callingComponent, "callingComponent");
 		ValidateAs.notNull(parentClass, "parentClass");
 
