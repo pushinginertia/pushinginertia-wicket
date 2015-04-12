@@ -18,24 +18,16 @@ package com.pushinginertia.wicket.core.model.replacement;
 import javax.annotation.Nonnull;
 
 /**
- * Replaces newlines entered by a user into &lt;br&gt; tags for HTML presentation.
+ * Replaces WeChat ID references in blocks of text.
  */
-public class NewlineContentReplacer implements ContentReplacer {
+public abstract class WeChatContentReplacer implements ContentReplacer {
 	private static final long serialVersionUID = 1L;
 
-	public static final NewlineContentReplacer INSTANCE = new NewlineContentReplacer();
-
-	private NewlineContentReplacer() {}
+	private static final String PATTERN = "微 ?信[:：]?\\s*[a-zA-Z0-9\\.]+([(（].*[)）])?";
 
 	@Nonnull
 	@Override
 	public String pattern() {
-		return "\n";
-	}
-
-	@Nonnull
-	@Override
-	public String replacement() {
-		return "<br/>";
+		return PATTERN;
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013 Pushing Inertia
+/* Copyright (c) 2011-2015 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  */
 package com.pushinginertia.wicket.core.model.replacement;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -23,16 +24,16 @@ import java.io.Serializable;
 public interface ContentReplacer extends Serializable {
 	/**
 	 * Pattern to search for (case insensitive).
-	 *
-	 * @return regex
+	 * @return Regex.
 	 */
+	@Nonnull
 	public String pattern();
 
 	/**
 	 * Replacement string to apply for matches of {@link #pattern()}. This could be a link to another page or just
 	 * some replacement text.
-	 *
-	 * @return non-null string
+	 * @return Non-null string.
 	 */
+	@Nonnull
 	public String replacement();
 }

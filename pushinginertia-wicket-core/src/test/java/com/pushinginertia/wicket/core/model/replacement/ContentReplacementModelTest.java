@@ -19,6 +19,8 @@ import org.apache.wicket.model.Model;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
+
 public class ContentReplacementModelTest {
 	private static final EmailToLinkContentReplacer EMAIL_TO_LINK =
 			new EmailToLinkContentReplacer("/contact", "email link");
@@ -26,6 +28,7 @@ public class ContentReplacementModelTest {
 			new WebLinkContentReplacer() {
 				private static final long serialVersionUID = 1L;
 
+				@Nonnull
 				@Override
 				public String replacement() {
 					return "[web link]";

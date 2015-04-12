@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2014 Pushing Inertia
+/* Copyright (c) 2011-2015 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package com.pushinginertia.wicket.core.model.replacement;
+
+import javax.annotation.Nonnull;
 
 /**
  * Replaces email addresses found in a string with a link to a given page with some given text.
@@ -35,11 +37,13 @@ public class EmailToLinkContentReplacer implements ContentReplacer {
 		this.linkName = linkName;
 	}
 
+	@Nonnull
 	@Override
 	public String pattern() {
 		return EMAIL_REGEX;
 	}
 
+	@Nonnull
 	@Override
 	public String replacement() {
 		return "<a href=\"" + linkRef + "\">" + linkName + "</a>";

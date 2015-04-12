@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013 Pushing Inertia
+/* Copyright (c) 2011-2015 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 package com.pushinginertia.wicket.core.model.replacement;
 
+import javax.annotation.Nonnull;
+
 /**
  * Replaces common ways that users might enter links to other sites with static replacement text.
  */
@@ -26,6 +28,7 @@ public abstract class WebLinkContentReplacer implements ContentReplacer {
 	 */
 	public static final String LINK_REGEX = "(https?://([a-z0-9-]+\\.)+[a-z]{2,7}(/[^ \\n]*){0,1}|www\\.[a-z0-9-]+\\.[a-z]{2,7}(/[^ \\n]*){0,1})";
 
+	@Nonnull
 	@Override
 	public String pattern() {
 		return LINK_REGEX;

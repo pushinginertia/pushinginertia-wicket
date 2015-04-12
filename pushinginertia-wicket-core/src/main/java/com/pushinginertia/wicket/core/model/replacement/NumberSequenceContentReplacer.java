@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2014 Pushing Inertia
+/* Copyright (c) 2011-2015 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package com.pushinginertia.wicket.core.model.replacement;
+
+import javax.annotation.Nonnull;
 
 /**
  * Replaces a sequence of numbers in a block of text content (presumably identifying a phone number or some other
@@ -39,11 +41,13 @@ public class NumberSequenceContentReplacer implements ContentReplacer {
 		this.pattern = BASE_REGEX_PRE + (minNumbers - 1) + BASE_REGEX_POST;
 	}
 
+	@Nonnull
 	@Override
 	public String pattern() {
 		return pattern;
 	}
 
+	@Nonnull
 	@Override
 	public String replacement() {
 		return "<a href=\"" + linkRef + "\">" + linkName + "</a>";

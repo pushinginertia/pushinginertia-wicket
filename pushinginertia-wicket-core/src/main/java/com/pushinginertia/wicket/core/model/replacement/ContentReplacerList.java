@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013 Pushing Inertia
+/* Copyright (c) 2011-2015 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,7 @@ public class ContentReplacerList implements Serializable {
 	private final List<ContentReplacer> replacerList;
 
 	private ContentReplacerList(final List<ContentReplacer> replacerList) {
-		this.replacerList = new ArrayList<ContentReplacer>(replacerList);
+		this.replacerList = new ArrayList<>(replacerList);
 	}
 
 	List<ContentReplacer> get() {
@@ -39,7 +39,7 @@ public class ContentReplacerList implements Serializable {
 	}
 
 	public static class Builder {
-		private final List<ContentReplacer> replacerList = new ArrayList<ContentReplacer>();
+		private final List<ContentReplacer> replacerList = new ArrayList<>();
 
 		public void add(final ContentReplacer replacer) {
 			replacerList.add(ValidateAs.notNull(replacer, "replacer"));
