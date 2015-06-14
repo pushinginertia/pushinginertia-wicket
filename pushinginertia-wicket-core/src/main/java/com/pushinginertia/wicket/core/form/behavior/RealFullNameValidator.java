@@ -26,9 +26,13 @@ import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Performs validation on inputs for first and family names, ensuring that the following rules are followed.
@@ -42,6 +46,7 @@ import java.util.regex.Pattern;
  *     <li>domain names are not permitted</li>
  *     <li>ampersand and slash are permitted but only once</li>
  *     <li>first and last character must be a letter</li>
+ *     <li>input cannot exist in the list of bad input strings, if supplied</li>
  * </ul>
  * If CJK (Chinese, Japanese, Korean) characters are entered, the minimum length of two characters is not enforced.
  * This is because it's common for a name to appear as only one character in these languages.
@@ -62,7 +67,7 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	 * Characters that can appear at most once in a name.
 	 */
 	private static final char[] MAX_ONE_CHARS = {'&', '/',};
-	private static final Set<String> TITLES = new HashSet<String>();
+	private static final Set<String> TITLES = new HashSet<>();
 	static {
 		TITLES.add("MR");
 		TITLES.add("MRS");
@@ -73,6 +78,11 @@ public class RealFullNameValidator extends AbstractFormValidator {
 
 	private final TextField<String> firstName;
 	private final TextField<String> familyName;
+	/**
+	 * A collection of case insensitive exact-match values that will trigger the validator to report an error on the
+	 * input.
+	 */
+	private final Set<String> illegalValues;
 
 	/**
 	 * Performs validation on inputs for first and family names, ensuring that a set of rules are followed.
@@ -80,9 +90,27 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	 * @param familyName input for the user's family name
 	 * @see RealFullNameValidator
 	 */
-	public RealFullNameValidator(final TextField<String> firstName, final TextField<String> familyName) {
+	public RealFullNameValidator(
+			@Nonnull final TextField<String> firstName,
+			@Nonnull final TextField<String> familyName) {
 		this.firstName = ValidateAs.notNull(firstName, "firstName");
 		this.familyName = ValidateAs.notNull(familyName, "familyName");
+		this.illegalValues = Collections.emptySet();
+	}
+
+	/**
+	 * Performs validation on inputs for first and family names, ensuring that a set of rules are followed.
+	 * @param firstName input for the user's first name
+	 * @param familyName input for the user's family name
+	 * @see RealFullNameValidator
+	 */
+	public RealFullNameValidator(
+			@Nonnull final TextField<String> firstName,
+			@Nonnull final TextField<String> familyName,
+			@Nonnull final Collection<String> illegalValues) {
+		this.firstName = ValidateAs.notNull(firstName, "firstName");
+		this.familyName = ValidateAs.notNull(familyName, "familyName");
+		this.illegalValues = illegalValues.stream().map(String::toLowerCase).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -174,7 +202,23 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		if (!firstAndLastAreLetters(familyName.getInput())) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
+			return;
 		}
+
+		// 9. check for illegal values passed in via class constructor
+		if (containsIllegalValue(illegalValues, firstName.getInput())) {
+			LOG.info(toLogString(form, firstName));
+			error(firstName);
+			return;
+		}
+		if (containsIllegalValue(illegalValues, familyName.getInput())) {
+			LOG.info(toLogString(form, familyName));
+			error(familyName);
+		}
+	}
+
+	static boolean containsIllegalValue(final Set<String> illegalValuesLowerCase, final String input) {
+		return illegalValuesLowerCase.contains(input.toLowerCase());
 	}
 
 	private String toLogString(final Form form, final TextField<String> errorComponent) {

@@ -15,10 +15,18 @@
  */
 package com.pushinginertia.wicket.core.form.behavior;
 
+import com.google.common.collect.ImmutableSet;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class RealFullNameValidatorTest {
+	@Test
+	public void containsIllegalValue() {
+		Assert.assertTrue(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("bad phrase"), "Bad Phrase"));
+		Assert.assertTrue(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("bad phrase"), "bad phrase"));
+		Assert.assertFalse(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("bad phrase"), "Bad Phrase abc"));
+	}
+
 	@Test
 	public void satisfiesLengthWithoutDot() {
 		Assert.assertFalse(RealFullNameValidator.satisfiesLengthWithoutDot("d"));
