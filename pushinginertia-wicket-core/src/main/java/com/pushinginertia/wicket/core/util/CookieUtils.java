@@ -69,6 +69,7 @@ public final class CookieUtils {
 			}
 		}
 		cookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(maxAgeDays));
+		cookie.setPath("/");
 		return cookie;
 	}
 }
