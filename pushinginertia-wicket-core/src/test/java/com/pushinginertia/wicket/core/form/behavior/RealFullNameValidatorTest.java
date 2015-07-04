@@ -35,6 +35,8 @@ public class RealFullNameValidatorTest {
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("dxa"));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("전"));
 		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("清"));
+		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("成松"));
+		Assert.assertTrue(RealFullNameValidator.satisfiesLengthWithoutDot("Éva"));
 	}
 
 	@Test
@@ -55,6 +57,7 @@ public class RealFullNameValidatorTest {
 		Assert.assertFalse(RealFullNameValidator.allVowelsOrConsonants("abc"));
 		Assert.assertTrue(RealFullNameValidator.allVowelsOrConsonants("ae"));
 		Assert.assertTrue(RealFullNameValidator.allVowelsOrConsonants("aáeéiíoóöőuúüű"));
+		Assert.assertFalse(RealFullNameValidator.allVowelsOrConsonants("Éva"));
 	}
 
 	@Test
@@ -80,7 +83,15 @@ public class RealFullNameValidatorTest {
 	public void firstAndLastAreLetters() {
 		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters("C-"));
 		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters("-C"));
+		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters("C."));
+		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters(".C"));
+		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters("-C-"));
+		Assert.assertFalse(RealFullNameValidator.firstAndLastAreLetters("-"));
 		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("Cabc"));
 		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("Ca"));
+		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("전"));
+		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("清"));
+		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("成松"));
+		Assert.assertTrue(RealFullNameValidator.firstAndLastAreLetters("Éva"));
 	}
 }

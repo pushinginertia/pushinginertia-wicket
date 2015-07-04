@@ -233,16 +233,21 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		return id + "=[" + input + ']';
 	}
 
+	/**
+	 * Tests that the first and last characters in the input string are A-Z letters (case insensitive).
+	 * @param input
+	 * @return
+	 */
 	static boolean firstAndLastAreLetters(final String input) {
 		if (input.length() == 0) {
 			return true;
 		}
 		final char first = Character.toLowerCase(input.charAt(0));
-		if (first < 'a' || first > 'z') {
+		if (!Character.isLetter(first)) {
 			return false;
 		}
 		final char last = Character.toLowerCase(input.charAt(input.length() - 1));
-		return (last >= 'a' && last <= 'z');
+		return (Character.isLetter(last));
 	}
 
 	private static boolean containsTitle(final TextField<String> tf) {
