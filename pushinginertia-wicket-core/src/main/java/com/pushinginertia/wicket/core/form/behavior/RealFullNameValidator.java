@@ -16,6 +16,7 @@
 package com.pushinginertia.wicket.core.form.behavior;
 
 import com.pushinginertia.commons.core.validation.ValidateAs;
+import com.pushinginertia.commons.domain.util.ModelInputNormalizationUtils;
 import com.pushinginertia.commons.lang.CharUtils;
 import com.pushinginertia.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.form.Form;
@@ -120,6 +121,9 @@ public class RealFullNameValidator extends AbstractFormValidator {
 
 	@Override
 	public void validate(final Form<?> form) {
+		// remove duplicate names in the two inputs
+		removeNameDupes();
+
 		// 1. minimum length and no dot
 		if (!satisfiesLengthWithoutDot(firstName)) {
 			LOG.info(toLogString(form, firstName));
@@ -132,20 +136,23 @@ public class RealFullNameValidator extends AbstractFormValidator {
 			return;
 		}
 
+		final String firstNameInput = firstName.getConvertedInput();
+		final String familyNameInput = familyName.getConvertedInput();
+
 		// 2. check equality
-		if (Objects.equal(firstName.getInput().toLowerCase(), familyName.getInput().toLowerCase())) {
+		if (Objects.equal(firstNameInput.toLowerCase(), familyNameInput.toLowerCase())) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
 			return;
 		}
 
 		// 3. check for illegal characters
-		if (CharUtils.inCharArray(firstName.getInput(), ILLEGAL_CHARS) >= 0) {
+		if (CharUtils.inCharArray(firstNameInput, ILLEGAL_CHARS) >= 0) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
 			return;
 		}
-		if (CharUtils.inCharArray(familyName.getInput(), ILLEGAL_CHARS) >= 0) {
+		if (CharUtils.inCharArray(familyNameInput, ILLEGAL_CHARS) >= 0) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 			return;
@@ -159,62 +166,71 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		}
 
 		// 5. check for all vowels or consonants in the name
-		if (allVowelsOrConsonants(firstName.getInput())) {
+		if (allVowelsOrConsonants(firstNameInput)) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
 			return;
 		}
-		if (allVowelsOrConsonants(familyName.getInput())) {
+		if (allVowelsOrConsonants(familyNameInput)) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 		}
 
 		// 6. reject domains
-		if (isDomain(firstName.getInput())) {
+		if (isDomain(firstNameInput)) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
 			return;
 		}
-		if (isDomain(familyName.getInput())) {
+		if (isDomain(familyNameInput)) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 			return;
 		}
 
 		// 7. check for one character limits
-		if (exceedsOneCharLimits(firstName.getInput())) {
+		if (exceedsOneCharLimits(firstNameInput)) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
 			return;
 		}
-		if (exceedsOneCharLimits(familyName.getInput())) {
+		if (exceedsOneCharLimits(familyNameInput)) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 			return;
 		}
 
 		// 8. check that first and last characters are letters
-		if (!firstAndLastAreLetters(firstName.getInput())) {
+		if (!firstAndLastAreLetters(firstNameInput)) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
 			return;
 		}
-		if (!firstAndLastAreLetters(familyName.getInput())) {
+		if (!firstAndLastAreLetters(familyNameInput)) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 			return;
 		}
 
 		// 9. check for illegal values passed in via class constructor
-		if (containsIllegalValue(illegalValues, firstName.getInput())) {
+		if (containsIllegalValue(illegalValues, firstNameInput)) {
 			LOG.info(toLogString(form, firstName));
 			error(firstName);
 			return;
 		}
-		if (containsIllegalValue(illegalValues, familyName.getInput())) {
+		if (containsIllegalValue(illegalValues, familyNameInput)) {
 			LOG.info(toLogString(form, familyName));
 			error(familyName);
 		}
+	}
+
+	private void removeNameDupes() {
+		final String[] names =
+				ModelInputNormalizationUtils.removeNameDupes(
+						firstName.getConvertedInput(),
+						familyName.getConvertedInput());
+		firstName.setConvertedInput(names[0]);
+		familyName.setConvertedInput(names[1]);
 	}
 
 	static boolean containsIllegalValue(final Set<String> illegalValuesLowerCase, final String input) {
@@ -229,14 +245,12 @@ public class RealFullNameValidator extends AbstractFormValidator {
 
 	private String toString(final TextField<String> tf) {
 		final String id = tf.getId();
-		final String input = tf.getInput();
+		final String input = tf.getConvertedInput();
 		return id + "=[" + input + ']';
 	}
 
 	/**
 	 * Tests that the first and last characters in the input string are A-Z letters (case insensitive).
-	 * @param input
-	 * @return
 	 */
 	static boolean firstAndLastAreLetters(final String input) {
 		if (input.length() == 0) {
@@ -251,7 +265,7 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	}
 
 	private static boolean containsTitle(final TextField<String> tf) {
-		return containsTitle(tf.getInput());
+		return containsTitle(tf.getConvertedInput());
 	}
 
 	static boolean exceedsOneCharLimits(final String input) {
@@ -319,7 +333,7 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	}
 
 	private static boolean satisfiesLengthWithoutDot(final TextField<String> tf) {
-		return satisfiesLengthWithoutDot(tf.getInput());
+		return satisfiesLengthWithoutDot(tf.getConvertedInput());
 	}
 
 	static boolean satisfiesLengthWithoutDot(final String input) {
