@@ -27,7 +27,8 @@ public class EmailToLinkContentReplacer implements ContentReplacer {
 	 * This matches real email addresses and also some common ways users change email addresses so that they're still
 	 * human readable but not parseable by bots.
 	 */
-	public static final String EMAIL_REGEX = "[a-z0-9._%+-]+(\\s*@\\s*| +at +)([a-z0-9-]+(\\s?\\.\\s?| +dot +))+[a-z]{2,4}";
+	public static final String EMAIL_REGEX =
+			"\\b([a-z0-9._%+-]+|([a-z0-9._%+-] )+)(\\s*@\\s*| +at +)(([a-z0-9-]+|([a-z0-9-] )+)(\\s?\\.\\s?| +dot +))+([a-z]{1,3}|([a-z] ){1,3})[a-z]";
 
 	private final String linkRef;
 	private final String linkName;
