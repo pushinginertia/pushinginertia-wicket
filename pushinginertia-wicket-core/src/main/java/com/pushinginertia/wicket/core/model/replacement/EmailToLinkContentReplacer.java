@@ -20,15 +20,8 @@ import javax.annotation.Nonnull;
 /**
  * Replaces email addresses found in a string with a link to a given page with some given text.
  */
-public class EmailToLinkContentReplacer implements ContentReplacer {
+public class EmailToLinkContentReplacer extends EmailContentReplacer {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * This matches real email addresses and also some common ways users change email addresses so that they're still
-	 * human readable but not parseable by bots.
-	 */
-	public static final String EMAIL_REGEX =
-			"\\b([a-z0-9._%+-]+|([a-z0-9._%+-] )+)(\\s*@\\s*| +at +)(([a-z0-9-]+|([a-z0-9-] )+)(\\s?\\.\\s?| +dot +))+([a-z]{1,3}|([a-z] ){1,3})[a-z]";
 
 	private final String linkRef;
 	private final String linkName;
@@ -36,12 +29,6 @@ public class EmailToLinkContentReplacer implements ContentReplacer {
 	public EmailToLinkContentReplacer(final String linkRef, final String linkName) {
 		this.linkRef = linkRef;
 		this.linkName = linkName;
-	}
-
-	@Nonnull
-	@Override
-	public String pattern() {
-		return EMAIL_REGEX;
 	}
 
 	@Nonnull
