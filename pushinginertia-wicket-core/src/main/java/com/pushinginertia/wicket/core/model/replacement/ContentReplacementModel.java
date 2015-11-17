@@ -78,10 +78,7 @@ public class ContentReplacementModel extends Model<String> {
 		}
 
 		// perform replacements
-		for (final ContentReplacer replacer: replacerList.get()) {
-			s = StringUtils.replaceAllCaseInsensitive(s, replacer.pattern(), replacer.replacement());
-		}
-		return s;
+		return replacerList.replace(s);
 	}
 
 	@Override

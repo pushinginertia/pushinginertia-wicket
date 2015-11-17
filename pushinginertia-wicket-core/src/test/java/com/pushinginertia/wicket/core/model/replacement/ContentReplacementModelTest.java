@@ -34,8 +34,8 @@ public class ContentReplacementModelTest {
 					return "[web link]";
 				}
 			};
-	public static final NumberSequenceContentReplacer NUMBER_TO_LINK =
-			new NumberSequenceContentReplacer(7, "/contact", "number link");
+	public static final NumberSequenceToLinkContentReplacer NUMBER_TO_LINK =
+			new NumberSequenceToLinkContentReplacer(7, "/contact", "number link");
 
 	@Test
 	public void emailReplacer() {

@@ -16,6 +16,7 @@
 package com.pushinginertia.wicket.core.model.replacement;
 
 import com.pushinginertia.commons.core.validation.ValidateAs;
+import com.pushinginertia.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,10 +35,6 @@ public class ContentReplacerList implements Serializable {
 		this.replacerList = new ArrayList<>(replacerList);
 	}
 
-	List<ContentReplacer> get() {
-		return Collections.unmodifiableList(replacerList);
-	}
-
 	public static class Builder {
 		private final List<ContentReplacer> replacerList = new ArrayList<>();
 
@@ -48,5 +45,18 @@ public class ContentReplacerList implements Serializable {
 		public ContentReplacerList build() {
 			return new ContentReplacerList(replacerList);
 		}
+	}
+
+	/**
+	 * Sequentially applies the content replacers contained within this list against an input string.
+	 * @param input String to apply replacements to.
+	 * @return Replaced string.
+	 */
+	public String replace(final String input) {
+		String s = input;
+		for (final ContentReplacer replacer: replacerList) {
+			s = StringUtils.replaceAllCaseInsensitive(s, replacer.pattern(), replacer.replacement());
+		}
+		return s;
 	}
 }
