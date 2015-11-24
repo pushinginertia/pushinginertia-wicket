@@ -64,6 +64,11 @@ public class ContentReplacementModelTest {
 				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
 				model.getObject());
 
+		model.setObject("<b>contact me</b> at user @@ g m a i l . c o m.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+
 		model.setObject("<b>contact me</b> at user at gmail.com.");
 		Assert.assertEquals(
 				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",

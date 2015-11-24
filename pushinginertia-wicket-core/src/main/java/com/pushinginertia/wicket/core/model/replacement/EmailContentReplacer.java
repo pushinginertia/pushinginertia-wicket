@@ -13,7 +13,7 @@ public abstract class EmailContentReplacer implements ContentReplacer {
 	 * human readable but not parseable by bots.
 	 */
 	public static final String EMAIL_REGEX =
-			"\\b([a-z0-9._%+-]+|([a-z0-9._%+-] )+)(\\s*@\\s*| +at +)(([a-z0-9-]+|([a-z0-9-] )+)(\\s?\\.\\s?| +dot +))+([a-z]{1,3}|([a-z] ){1,3})[a-z]";
+			"\\b([a-z0-9._%+-]+|([a-z0-9._%+-] )+)(\\s*@+\\s*| +at +)(([a-z0-9-]+|([a-z0-9-] )+)(\\s?\\.\\s?| +dot +))+([a-z]{1,3}|([a-z] ){1,3})[a-z]";
 
 	public EmailContentReplacer() {
 	}
