@@ -121,6 +121,11 @@ public class ContentReplacementModelTest {
 		Assert.assertEquals(
 				"<b>contact me</b> at <a href=\"/contact\">number link</a>.",
 				model.getObject());
+
+		model.setObject("<b>contact me</b> at \u2461\u2462\u2463-\u2464\u2465\u2466-\u2466\u2467\u2468\u2469.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">number link</a>.",
+				model.getObject());
 	}
 
 	@Test
