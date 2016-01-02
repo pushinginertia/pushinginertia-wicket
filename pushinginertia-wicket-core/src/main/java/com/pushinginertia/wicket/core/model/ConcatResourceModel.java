@@ -15,12 +15,13 @@
  */
 package com.pushinginertia.wicket.core.model;
 
-import com.pushinginertia.commons.core.validation.ValidateAs;
 import com.pushinginertia.commons.ui.i18n.IResourceLookupKey;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,18 +30,21 @@ import java.util.List;
  * A resource model that concatenates the output of its contained models.
  */
 public class ConcatResourceModel extends AbstractReadOnlyModel<String> {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	public static class Builder {
 		private final String separator;
 		private final ArrayList<IModel<String>> modelList = new ArrayList<>();
 
-		public Builder(final String separator) {
-			ValidateAs.notNull(separator, "separator");
+		private Builder() {
+			this.separator = null;
+		}
+
+		private Builder(@Nullable final String separator) {
 			this.separator = separator;
 		}
 
-		public Builder add(final IModel<String> model) {
+		public Builder add(@Nonnull final IModel<String> model) {
 			modelList.add(model);
 			return this;
 		}
@@ -51,7 +55,7 @@ public class ConcatResourceModel extends AbstractReadOnlyModel<String> {
 		 * @param resolver Something that provides a resource lookup key for the purpose of constructing a model.
 		 * @return This instance for method chaining.
 		 */
-		public Builder add(final IResourceLookupKey resolver) {
+		public Builder add(@Nullable final IResourceLookupKey resolver) {
 			if (resolver != null) {
 				return add(new ResourceModel(resolver.getResourceLookupKey()));
 			}
@@ -66,9 +70,20 @@ public class ConcatResourceModel extends AbstractReadOnlyModel<String> {
 	private final String separator;
 	private final ArrayList<IModel<String>> modelList;
 
+	/**
+	 * Creates a new builder that concatenates each model without a separator string in between each model.
+	 */
+	public static Builder builderNoSeparator() {
+		return new Builder();
+	}
+
+	public static Builder builder(@Nullable final String separator) {
+		return new Builder(separator);
+	}
+
 	private ConcatResourceModel(
-			final String separator,
-			final ArrayList<IModel<String>> modelList) {
+			@Nullable final String separator,
+			@Nonnull final ArrayList<IModel<String>> modelList) {
 		this.separator = separator;
 		this.modelList = modelList;
 	}
@@ -81,8 +96,8 @@ public class ConcatResourceModel extends AbstractReadOnlyModel<String> {
 	 * @return New instance.
 	 */
 	public static <T extends Serializable & List<IModel<String>>> ConcatResourceModel forList(
-			final String separator,
-			final T modelList) {
+			@Nullable final String separator,
+			@Nonnull final T modelList) {
 		return new ConcatResourceModel(separator, new ArrayList<>(modelList));
 	}
 
@@ -101,8 +116,6 @@ public class ConcatResourceModel extends AbstractReadOnlyModel<String> {
 	@Override
 	public void detach() {
 		super.detach();
-		for (final IModel<String> model: modelList) {
-			model.detach();
-		}
+		modelList.forEach(IModel::detach);
 	}
 }

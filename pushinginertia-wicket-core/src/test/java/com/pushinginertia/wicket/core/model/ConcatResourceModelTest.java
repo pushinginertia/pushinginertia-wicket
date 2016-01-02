@@ -35,10 +35,18 @@ public class ConcatResourceModelTest {
 
 	@Test
 	public void getObjectFromBuilder() {
-		final ConcatResourceModel.Builder builder = new ConcatResourceModel.Builder(", ");
+		final ConcatResourceModel.Builder builder = ConcatResourceModel.builder(", ");
 		builder.add(Model.of("value1"));
 		builder.add(Model.of("value2"));
 		builder.add(Model.of("value3"));
 		Assert.assertEquals("value1, value2, value3", builder.build().getObject());
+	}
+
+	@Test
+	public void noSeparator() {
+		final ConcatResourceModel.Builder builder = ConcatResourceModel.builderNoSeparator();
+		builder.add(Model.of("value1"));
+		builder.add(Model.of("value2"));
+		Assert.assertEquals("value1value2", builder.build().getObject());
 	}
 }
