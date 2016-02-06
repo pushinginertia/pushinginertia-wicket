@@ -83,6 +83,29 @@ public class ContentReplacementModelTest {
 		Assert.assertEquals(
 				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
 				model.getObject());
+
+		model.setObject("<b>contact me</b> at user.name at school dot edu.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+
+		// COMMERCIAL AT
+		model.setObject("<b>contact me</b> at user.name\u0040gmail.com.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+
+		// SMALL COMMERCIAL AT
+		model.setObject("<b>contact me</b> at user.name\ufe6bgmail.com.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
+
+		// FULLWIDTH COMMERCIAL AT
+		model.setObject("<b>contact me</b> at user.name\uff20gmail.com.");
+		Assert.assertEquals(
+				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
+				model.getObject());
 	}
 
 	@Test
