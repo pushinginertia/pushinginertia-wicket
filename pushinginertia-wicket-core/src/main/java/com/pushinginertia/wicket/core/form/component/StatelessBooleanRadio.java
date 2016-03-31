@@ -16,6 +16,8 @@
 package com.pushinginertia.wicket.core.form.component;
 
 import org.apache.wicket.markup.html.form.Radio;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import javax.annotation.Nonnull;
 
@@ -24,16 +26,21 @@ import javax.annotation.Nonnull;
  * input tag will be 'true' or 'false' instead of a wicket-generated incrementing value specific to the session.
  */
 public class StatelessBooleanRadio extends Radio<Boolean> {
-	private final boolean value;
-
 	public StatelessBooleanRadio(@Nonnull final String id, final boolean value) {
-		super(id);
-		this.value = value;
+		this(id, Model.of(value));
+	}
+
+	public StatelessBooleanRadio(@Nonnull final String id, @Nonnull final IModel<Boolean> model) {
+		super(id, model);
 	}
 
 	@Override
 	public String getValue() {
-		return Boolean.toString(value);
+		final Boolean modelObject = getModelObject();
+		if (modelObject == null) {
+			return "null";
+		}
+		return modelObject.toString();
 	}
 
 	@Override
