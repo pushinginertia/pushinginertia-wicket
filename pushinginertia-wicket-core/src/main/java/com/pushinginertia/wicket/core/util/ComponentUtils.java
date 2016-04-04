@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -132,13 +133,28 @@ public final class ComponentUtils {
 	 * @see org.apache.wicket.request.UrlRenderer#renderFullUrl(org.apache.wicket.request.Url)
 	 */
 	public static String constructRedirectUrl(
-			final Component component,
-			final String hostName,
-			final Class<? extends Page> targetPage,
+			@Nonnull final Component component,
+			@Nonnull final String hostName,
+			@Nonnull final Class<? extends Page> targetPage,
 			final PageParameters pageParameters) {
 		ValidateAs.notNull(component, "component");
 		ValidateAs.notNull(targetPage, "targetPage");
 
+		String absolutePath = constructAbsolutePath(component, targetPage, pageParameters);
+		return constructUrl(component, hostName, absolutePath);
+	}
+
+	/**
+	 * Constructs the absolute path for a redirect request to a target page and its parameters.
+	 * @param component component the call is being made from (used to obtain the container request)
+	 * @param targetPage target page
+	 * @param pageParameters parameters for the target page (may be null)
+	 * @return Full path.
+	 */
+	public static String constructAbsolutePath(
+			@Nonnull final Component component,
+			@Nonnull final Class<? extends Page> targetPage,
+			@Nullable final PageParameters pageParameters) {
 		final HttpServletRequest req = (HttpServletRequest)component.getRequest().getContainerRequest();
 
 		final String relativePath = component.urlFor(targetPage, pageParameters).toString();
@@ -164,8 +180,7 @@ public final class ComponentUtils {
 					e);
 			throw e;
 		}
-
-		return constructUrl(component, hostName, absolutePath);
+		return absolutePath;
 	}
 
 	/**
