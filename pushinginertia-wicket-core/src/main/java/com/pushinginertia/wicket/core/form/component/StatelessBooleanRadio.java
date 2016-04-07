@@ -15,6 +15,7 @@
  */
 package com.pushinginertia.wicket.core.form.component;
 
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -46,5 +47,13 @@ public class StatelessBooleanRadio extends Radio<Boolean> {
 	@Override
 	protected boolean getStatelessHint() {
 		return true;
+	}
+
+	@Override
+	protected void onComponentTag(final ComponentTag tag) {
+		super.onComponentTag(tag);
+		if (getGroup().isRequired()) {
+			tag.put("required", "required");
+		}
 	}
 }
