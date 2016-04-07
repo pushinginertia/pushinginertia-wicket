@@ -21,12 +21,21 @@ import javax.annotation.Nonnull;
  * Replaces email addresses found in a string with a link to a given page with some given text.
  */
 public class EmailToLinkContentReplacer extends EmailContentReplacer {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	private final String linkRef;
 	private final String linkName;
 
 	public EmailToLinkContentReplacer(final String linkRef, final String linkName) {
+		this.linkRef = linkRef;
+		this.linkName = linkName;
+	}
+
+	public EmailToLinkContentReplacer(
+			@Nonnull final String linkRef,
+			@Nonnull final String linkName,
+			@Nonnull final IEmailContentReplacerPatternProvider provider) {
+		super(provider);
 		this.linkRef = linkRef;
 		this.linkName = linkName;
 	}
