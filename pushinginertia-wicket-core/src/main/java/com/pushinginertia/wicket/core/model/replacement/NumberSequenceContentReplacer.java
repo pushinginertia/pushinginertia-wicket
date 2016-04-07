@@ -20,12 +20,12 @@ public abstract class NumberSequenceContentReplacer implements ContentReplacer {
 	/**
 	 * Matches a sequence of numbers that might also be written as words with various punctuation in between.
 	 */
-	private static final String BASE_REGEX_PRE = "\\(?" + NUM + "([\\(\\)\\., \u3000-]*" + NUM + "){";
+	private static final String BASE_REGEX_PRE = "(\\(\\s*)?" + NUM + "([\\(\\)\\., \u3000-]*" + NUM + "){";
 	private static final String BASE_REGEX_POST = ",}";
 
 	private final String pattern;
 
-	protected NumberSequenceContentReplacer(final int minNumbers) {
+	public NumberSequenceContentReplacer(final int minNumbers) {
 		this.pattern = BASE_REGEX_PRE + (minNumbers - 1) + BASE_REGEX_POST;
 	}
 
