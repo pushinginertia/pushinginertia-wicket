@@ -45,12 +45,16 @@ public class EmailContentReplacerTest {
 		Assert.assertTrue("a.b (at) out look . com".matches(replacer.pattern()));
 		Assert.assertTrue("username at yahoo com".matches(replacer.pattern()));
 		Assert.assertTrue("username@gmail".matches(replacer.pattern()));
+		Assert.assertTrue("user_1234@yahoocom".matches(replacer.pattern()));
 	}
 
 	@Test
 	public void constructEmailDomainRegex() {
 		final Set<String> commonTlds = ImmutableSet.of("com", "co.uk", "ca", "net");
 		final String regex = EmailContentReplacerPatternProvider.constructEmailDomainRegex(COMMON_EMAIL_DOMAINS);
+
+		Assert.assertTrue("yahoocom".matches(regex));
+		Assert.assertTrue("gmail com".matches(regex));
 
 		commonTlds.stream()
 				.forEach(tld -> COMMON_EMAIL_DOMAINS.stream()
@@ -68,7 +72,6 @@ public class EmailContentReplacerTest {
 									"Domain does not match: " + fqdnWithSpaces,
 									fqdnWithSpaces.matches(regex));
 						}));
-		System.out.println(regex);
 	}
 
 	@Nonnull

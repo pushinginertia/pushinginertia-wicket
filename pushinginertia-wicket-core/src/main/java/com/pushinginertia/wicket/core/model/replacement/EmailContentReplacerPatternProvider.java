@@ -16,7 +16,7 @@ public class EmailContentReplacerPatternProvider implements EmailContentReplacer
 	 */
 	private static final String DOT = "(" + INNER_DOT + ")";
 	private static final String COMMON_TLDS =
-			"((" + INNER_DOT + "| )(com|net|[a-z][a-z]|co" + DOT + "[a-z][a-z]|com" + DOT + "[a-z][a-z]))?";
+			"((" + INNER_DOT + "| )?(com|net|[a-z][a-z]|co" + DOT + "[a-z][a-z]|com" + DOT + "[a-z][a-z]))?";
 	/**
 	 * The part of an email preceding the '@' sign.
 	 */
@@ -35,8 +35,8 @@ public class EmailContentReplacerPatternProvider implements EmailContentReplacer
 	 */
 	private static final String EMAIL_REGEX =
 			LOCAL_PART + AT +
-					SUBDOMAIN + '+' +                   // repeating subdomains
-					"([a-z]{1,5}|([a-z] ){1,5})[a-z]";  // generic top level domain
+			SUBDOMAIN + '+' +                   // repeating subdomains
+			"([a-z]{1,5}|([a-z] ){1,5})[a-z]";  // generic top level domain
 
 	private static final EmailContentReplacerPatternProvider DEFAULT_REGEX =
 			new EmailContentReplacerPatternProvider(EMAIL_REGEX);
