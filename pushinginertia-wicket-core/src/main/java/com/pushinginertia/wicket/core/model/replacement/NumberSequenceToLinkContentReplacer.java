@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * identification number) with a link to a given page with some given text.
  */
 public class NumberSequenceToLinkContentReplacer extends NumberSequenceContentReplacer {
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	private final String linkRef;
 	private final String linkName;
@@ -37,5 +37,10 @@ public class NumberSequenceToLinkContentReplacer extends NumberSequenceContentRe
 	@Override
 	public String replacement() {
 		return "<a href=\"" + linkRef + "\">" + linkName + "</a>";
+	}
+
+	@Override
+	public String toString() {
+		return "NumberSequenceToLinkContentReplacer{linkRef=" + linkRef + ", linkName=" + linkName + '}';
 	}
 }

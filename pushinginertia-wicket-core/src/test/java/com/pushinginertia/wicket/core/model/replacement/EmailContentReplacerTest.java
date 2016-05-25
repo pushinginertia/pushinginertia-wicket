@@ -34,7 +34,6 @@ public class EmailContentReplacerTest {
 		final EmailContentReplacerPatternProvider provider =
 				new EmailContentReplacerPatternProvider(COMMON_EMAIL_DOMAINS);
 		final EmailContentReplacer replacer = new EmailContentReplacerMock(provider);
-		System.out.println(replacer.pattern());
 		Assert.assertTrue("user1234 [at] example.com".matches(replacer.pattern()));
 		Assert.assertTrue("user1234 {at} example.com".matches(replacer.pattern()));
 		Assert.assertTrue("user1234[at]example.com".matches(replacer.pattern()));
