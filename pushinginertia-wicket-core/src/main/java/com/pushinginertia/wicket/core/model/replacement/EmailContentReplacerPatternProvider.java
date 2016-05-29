@@ -28,7 +28,7 @@ public class EmailContentReplacerPatternProvider implements EmailContentReplacer
 	/**
 	 * Variations of an '@' sign.
 	 */
-	private static final String AT = "(\\s*[@\uff20\u0040\ufe6b]+\\s*| *at *| *[\\[{(]at[\\]})] *)";
+	private static final String AT = "(\\s*[@\uff20\u0040\ufe6b]+\\s*| *at +| *[\\[{(]at[\\]})] *)";
 	/**
 	 * This matches real email addresses and also some common ways users change email addresses so that they're still
 	 * human readable but not parseable by bots.

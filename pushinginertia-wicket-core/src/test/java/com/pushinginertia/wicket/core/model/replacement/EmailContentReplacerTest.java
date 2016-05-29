@@ -38,13 +38,15 @@ public class EmailContentReplacerTest {
 		Assert.assertTrue("user1234 {at} example.com".matches(replacer.pattern()));
 		Assert.assertTrue("user1234[at]example.com".matches(replacer.pattern()));
 		Assert.assertTrue("user1234{at}example.com".matches(replacer.pattern()));
-		Assert.assertTrue("user1234atexample.com".matches(replacer.pattern()));
+		Assert.assertTrue("user1234at example.com".matches(replacer.pattern()));
 		Assert.assertTrue("user(at)example dot com".matches(replacer.pattern()));
 		Assert.assertTrue("a.b @out look . com".matches(replacer.pattern()));
 		Assert.assertTrue("a.b (at) out look . com".matches(replacer.pattern()));
 		Assert.assertTrue("username at yahoo com".matches(replacer.pattern()));
 		Assert.assertTrue("username@gmail".matches(replacer.pattern()));
 		Assert.assertTrue("user_1234@yahoocom".matches(replacer.pattern()));
+
+		Assert.assertFalse("transportation. And".matches(replacer.pattern()));
 	}
 
 	@Test

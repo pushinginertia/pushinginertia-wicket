@@ -111,6 +111,12 @@ public class ContentReplacementModelTest {
 		Assert.assertEquals(
 				"<b>contact me</b> at <a href=\"/contact\">email link</a>.",
 				model.getObject());
+
+		// ensure that "transportation. Bus" doesn't mistakenly get matched as "transport@ion.bus"
+		model.setObject("Good transportation. Bus stop nearby.");
+		Assert.assertEquals(
+				"Good transportation. Bus stop nearby.",
+				model.getObject());
 	}
 
 	@Test
