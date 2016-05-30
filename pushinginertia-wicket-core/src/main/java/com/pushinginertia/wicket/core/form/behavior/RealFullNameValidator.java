@@ -15,6 +15,7 @@
  */
 package com.pushinginertia.wicket.core.form.behavior;
 
+import com.google.common.base.CharMatcher;
 import com.pushinginertia.commons.core.validation.ValidateAs;
 import com.pushinginertia.commons.domain.util.ModelInputNormalizationUtils;
 import com.pushinginertia.commons.lang.CharUtils;
@@ -320,13 +321,17 @@ public class RealFullNameValidator extends AbstractFormValidator {
 		return vowels == either || consonants == either;
 	}
 
+	/**
+	 * Identifies if an input name contains a title like Mr or Mrs. The input string might contain just the title or
+	 * contain the title as a prefix, followed by a dot or space.
+	 */
 	static boolean containsTitle(final String input) {
 		final String input2 = input.toUpperCase();
-		final int idx = input2.indexOf('.');
+		final int idx = CharMatcher.anyOf(". ").indexIn(input2);
 		if (idx < 0) {
 			return TITLES.contains(input2);
 		}
-		if (idx + 1 == input2.length()) {
+		if (idx < input2.length()) {
 			return TITLES.contains(input2.substring(0, idx));
 		}
 		return false;

@@ -41,11 +41,12 @@ public class RealFullNameValidatorTest {
 
 	@Test
 	public void containsTitle() {
-		Assert.assertFalse(RealFullNameValidator.containsTitle("Mr.x"));
+		Assert.assertTrue(RealFullNameValidator.containsTitle("Mr.x"));
 		Assert.assertTrue(RealFullNameValidator.containsTitle("Mr."));
 		Assert.assertTrue(RealFullNameValidator.containsTitle("Mr"));
 		Assert.assertTrue(RealFullNameValidator.containsTitle("Mrs."));
 		Assert.assertTrue(RealFullNameValidator.containsTitle("Mrs"));
+		Assert.assertTrue(RealFullNameValidator.containsTitle("Mrs A"));
 		Assert.assertFalse(RealFullNameValidator.containsTitle("Bob"));
 	}
 
