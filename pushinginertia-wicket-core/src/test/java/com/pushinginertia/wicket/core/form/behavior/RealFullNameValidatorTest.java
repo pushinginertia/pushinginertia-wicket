@@ -22,9 +22,20 @@ import org.junit.Test;
 public class RealFullNameValidatorTest {
 	@Test
 	public void containsIllegalValue() {
-		Assert.assertTrue(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("bad phrase"), "Bad Phrase"));
-		Assert.assertTrue(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("bad phrase"), "bad phrase"));
-		Assert.assertFalse(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("bad phrase"), "Bad Phrase abc"));
+		Assert.assertTrue(
+				RealFullNameValidator.containsIllegalValue(
+						ImmutableSet.of("badword1", "badword2"),
+						"A sentence with badword1."));
+		Assert.assertTrue(
+				RealFullNameValidator.containsIllegalValue(
+						ImmutableSet.of("badword1", "badword2"),
+						"Badword2 in the sentence."));
+		Assert.assertFalse(
+				RealFullNameValidator.containsIllegalValue(
+						ImmutableSet.of("badword1", "badword2"),
+						"Badword is ok."));
+		Assert.assertTrue(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("john", "jane"), "Mister John"));
+		Assert.assertTrue(RealFullNameValidator.containsIllegalValue(ImmutableSet.of("john", "jane"), "Jane"));
 	}
 
 	@Test

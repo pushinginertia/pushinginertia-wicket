@@ -16,6 +16,7 @@
 package com.pushinginertia.wicket.core.form.behavior;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
 import com.pushinginertia.commons.core.validation.ValidateAs;
 import com.pushinginertia.commons.domain.util.ModelInputNormalizationUtils;
 import com.pushinginertia.commons.lang.CharUtils;
@@ -235,7 +236,13 @@ public class RealFullNameValidator extends AbstractFormValidator {
 	}
 
 	static boolean containsIllegalValue(final Set<String> illegalValuesLowerCase, final String input) {
-		return illegalValuesLowerCase.contains(input.toLowerCase());
+		final Splitter splitter = Splitter.on(CharMatcher.anyOf(". -&/")).omitEmptyStrings().trimResults();
+		for (final String token: splitter.split(input.toLowerCase())) {
+			if (illegalValuesLowerCase.contains(token)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private String toLogString(final Form form, final TextField<String> errorComponent) {
