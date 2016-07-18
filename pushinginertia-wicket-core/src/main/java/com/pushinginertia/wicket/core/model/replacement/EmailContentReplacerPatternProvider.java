@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class EmailContentReplacerPatternProvider implements EmailContentReplacer.IEmailContentReplacerPatternProvider {
 	private static final long serialVersionUID = 1L;
 
-	private static final String INNER_DOT = "\\s?\\.\\s?| +dot +";
+	private static final String INNER_DOT = "\\s?\\.\\s?| +dot +|\\s?\\(period\\)\\s?";
 	/**
 	 * Various ways a 'dot' might be typed in the domain of an email.
 	 */
@@ -28,7 +28,7 @@ public class EmailContentReplacerPatternProvider implements EmailContentReplacer
 	/**
 	 * Variations of an '@' sign.
 	 */
-	private static final String AT = "(\\s*[@\uff20\u0040\ufe6b]+\\s*| *at +| *[\\[{(]at[\\]})] *)";
+	private static final String AT = "(\\s*[@\uff20\u0040\ufe6b]+\\s*| *at +| *[\\[{(]at[\\]})] *| *\\(a\\) *)";
 	/**
 	 * This matches real email addresses and also some common ways users change email addresses so that they're still
 	 * human readable but not parseable by bots.
