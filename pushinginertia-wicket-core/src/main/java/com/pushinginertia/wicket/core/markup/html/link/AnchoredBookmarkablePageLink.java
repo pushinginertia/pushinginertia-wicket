@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2014 Pushing Inertia
+/* Copyright (c) 2011-2017 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  */
 package com.pushinginertia.wicket.core.markup.html.link;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
@@ -22,26 +23,33 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * A bookmarkable URL that specifies a custom anchor link. Based off a wicket mail list posting by Thijs Vonk.
+ * A bookmarkable URL that specifies a custom anchor link. Based off a wicket
+ * mail list posting by Thijs Vonk.
  * @see <a href="http://apache-wicket.1842946.n4.nabble.com/Anchors-in-Wicket-td1866779.html">http://apache-wicket.1842946.n4.nabble.com/Anchors-in-Wicket-td1866779.html</a>
  */
-public class AnchoredBookmarkablePageLink extends BookmarkablePageLink {
-	private static final long serialVersionUID = 1L;
+public class AnchoredBookmarkablePageLink<T extends Page> extends BookmarkablePageLink<T> {
+	private static final long serialVersionUID = 2L;
 
 	private final IModel<String> pageAnchor;
 
-	public AnchoredBookmarkablePageLink(final String id, final Class pageClass, final IModel<String> anchor) {
+	public AnchoredBookmarkablePageLink(
+			final String id,
+			final Class<T> pageClass,
+			final IModel<String> anchor) {
 		super(id, pageClass);
 		this.pageAnchor = anchor;
 	}
 
-	public AnchoredBookmarkablePageLink(final String id, final Class pageClass, final String anchor) {
-		this(id, pageClass, new Model<String>(anchor));
+	public AnchoredBookmarkablePageLink(
+			final String id,
+			final Class<T> pageClass,
+			final String anchor) {
+		this(id, pageClass, Model.of(anchor));
 	}
 
 	public AnchoredBookmarkablePageLink(
 			final String id,
-			final Class pageClass,
+			final Class<T> pageClass,
 			final PageParameters params,
 			final IModel<String> anchor) {
 		super(id, pageClass, params);
@@ -50,10 +58,10 @@ public class AnchoredBookmarkablePageLink extends BookmarkablePageLink {
 
 	public AnchoredBookmarkablePageLink(
 			final String id,
-			final Class pageClass,
+			final Class<T> pageClass,
 			final PageParameters params,
 			final String anchor) {
-		this(id, pageClass, params, new Model<String>(anchor));
+		this(id, pageClass, params, Model.of(anchor));
 	}
 
 	public IModel<String> getPageAnchor() {
