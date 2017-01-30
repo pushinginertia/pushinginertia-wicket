@@ -22,16 +22,18 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 
+import javax.annotation.Nonnull;
+
 /**
  * Generates a rel="canonical" link to either the current page (without any arguments) or a given domain and page on that
  * domain. This is useful for pages with similar content, such as paginated search results.
  * <p>
  * Sample output:
  * <br/>
- * &lt;link rel="canonical" href="http://www.example.com/pagepath"/&gt;
+ * &lt;link rel="canonical" href="https://www.example.com/pagepath"/&gt;
  */
 public class CanonicalRefBehavior extends Behavior {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	private final String domain;
 	private final String path;
@@ -44,7 +46,7 @@ public class CanonicalRefBehavior extends Behavior {
 	 * @param domain domain portion of the URL
 	 * @param path path portion of the URL
 	 */
-	public CanonicalRefBehavior(final String domain, final String path) {
+	public CanonicalRefBehavior(@Nonnull final String domain, @Nonnull final String path) {
 		this.domain = ValidateAs.notNull(domain, "domain");
 		this.path = ValidateAs.notNull(path, "path");
 	}
@@ -60,13 +62,10 @@ public class CanonicalRefBehavior extends Behavior {
 	}
 
 	@Override
-	public void renderHead(Component component, IHeaderResponse response) {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("<link rel=\"canonical\" href=\"http://");
-		sb.append(domain);
-		sb.append('/');
-		sb.append(path);
-		sb.append("\"/>");
-		response.renderString(sb.toString());
+	public void renderHead(
+			final Component component,
+			final IHeaderResponse response) {
+		response.renderString(
+				"<link rel=\"canonical\" href=\"https://" + domain + '/' + path + "\"/>");
 	}
 }
