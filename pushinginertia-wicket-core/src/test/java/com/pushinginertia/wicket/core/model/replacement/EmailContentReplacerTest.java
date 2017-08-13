@@ -7,9 +7,12 @@ import org.junit.Test;
 
 import javax.annotation.Nonnull;
 import java.security.SecureRandom;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,7 +21,7 @@ public class EmailContentReplacerTest {
 			ImmutableSet.of("gmail", "hotmail", "yahoo", "outlook", "live");
 
 	private static class EmailContentReplacerMock extends EmailContentReplacer {
-		public EmailContentReplacerMock(@Nonnull final IEmailContentReplacerPatternProvider provider) {
+		EmailContentReplacerMock(@Nonnull final IEmailContentReplacerPatternProvider provider) {
 			super(provider);
 		}
 
@@ -29,27 +32,55 @@ public class EmailContentReplacerTest {
 		}
 	}
 
+	private final EmailContentReplacer replacer =
+			new EmailContentReplacerMock(
+					new EmailContentReplacerPatternProvider(COMMON_EMAIL_DOMAINS));
+	private Pattern replacerPattern =
+			Pattern.compile(replacer.pattern(), Pattern.CASE_INSENSITIVE);
+
+	private void assertStringMatchesEmailPattern(final String s) {
+		// ContentReplacerList performs a case insensitive pattern match
+		final Matcher m = replacerPattern.matcher(s);
+		Assert.assertTrue(
+				MessageFormat.format(
+						"String [{0}] does not match pattern: {1}",
+						s,
+						replacer.pattern()),
+				m.matches());
+	}
+
 	@Test
 	public void regex() {
-		final EmailContentReplacerPatternProvider provider =
-				new EmailContentReplacerPatternProvider(COMMON_EMAIL_DOMAINS);
-		final EmailContentReplacer replacer = new EmailContentReplacerMock(provider);
-		Assert.assertTrue("user1234 [at] example.com".matches(replacer.pattern()));
-		Assert.assertTrue("user1234 {at} example.com".matches(replacer.pattern()));
-		Assert.assertTrue("user1234[at]example.com".matches(replacer.pattern()));
-		Assert.assertTrue("user1234{at}example.com".matches(replacer.pattern()));
-		Assert.assertTrue("user1234at example.com".matches(replacer.pattern()));
-		Assert.assertTrue("user(at)example dot com".matches(replacer.pattern()));
-		Assert.assertTrue("a.b @out look . com".matches(replacer.pattern()));
-		Assert.assertTrue("a.b (at) out look . com".matches(replacer.pattern()));
-		Assert.assertTrue("username at yahoo com".matches(replacer.pattern()));
-		Assert.assertTrue("username@gmail".matches(replacer.pattern()));
-		Assert.assertTrue("user_1234@yahoocom".matches(replacer.pattern()));
-		Assert.assertTrue("user(a)example.com".matches(replacer.pattern()));
-		Assert.assertTrue("user(at)example(period)com".matches(replacer.pattern()));
+		assertStringMatchesEmailPattern("user1234 [at] example.com");
+		assertStringMatchesEmailPattern("user1234 {at} example.com");
+		assertStringMatchesEmailPattern("user1234[at]example.com");
+		assertStringMatchesEmailPattern("user1234{at}example.com");
+		assertStringMatchesEmailPattern("user1234at example.com");
+		assertStringMatchesEmailPattern("user(at)example dot com");
+		assertStringMatchesEmailPattern("a.b @out look . com");
+		assertStringMatchesEmailPattern("a.b (at) out look . com");
+		assertStringMatchesEmailPattern("username at yahoo com");
+		assertStringMatchesEmailPattern("username@gmail");
+		assertStringMatchesEmailPattern("user_1234@yahoocom");
+		assertStringMatchesEmailPattern("user(a)example.com");
+		assertStringMatchesEmailPattern("user(at)example(period)com");
+		// seen as (user)(@)(example.com)
+		assertStringMatchesEmailPattern("user)(@)(example.com");
+		assertStringMatchesEmailPattern("user)(at)(example.com");
+		assertStringMatchesEmailPattern("user (at) (example) dot com");
+		assertStringMatchesEmailPattern("user at yahoo. com");
+		assertStringMatchesEmailPattern("user.name (at) gmail . com");
+		assertStringMatchesEmailPattern("user at gmail com");
+		assertStringMatchesEmailPattern("User1234 at. hotmail..com");
+		assertStringMatchesEmailPattern("Someone at Gmail.Com");
+		assertStringMatchesEmailPattern("user123 @ hotmail . com");
+		assertStringMatchesEmailPattern("user999 <at> gmail <dot> com");
+		assertStringMatchesEmailPattern("user999<at>gmail<dot>com");
 
-		Assert.assertFalse("transportation. And".matches(replacer.pattern()));
-		Assert.assertFalse("I like to eat meat pies.".matches(replacer.pattern()));
+		Assert.assertFalse(replacerPattern.matcher("transportation. And").matches());
+		Assert.assertFalse(replacerPattern.matcher("I like to eat meat pies.").matches());
+		Assert.assertFalse(replacerPattern.matcher("we eat meat every night").matches());
+		Assert.assertFalse(replacerPattern.matcher("a private bathroom. There are other").matches());
 	}
 
 	@Test
@@ -60,9 +91,9 @@ public class EmailContentReplacerTest {
 		Assert.assertTrue("yahoocom".matches(regex));
 		Assert.assertTrue("gmail com".matches(regex));
 
-		commonTlds.stream()
-				.forEach(tld -> COMMON_EMAIL_DOMAINS.stream()
-						.forEach(domain -> {
+		commonTlds.forEach(
+				tld -> COMMON_EMAIL_DOMAINS.forEach(
+						domain -> {
 							final String fqdn = domain + '.' + tld;
 							Assert.assertTrue(
 									"Domain does not match: " + fqdn,

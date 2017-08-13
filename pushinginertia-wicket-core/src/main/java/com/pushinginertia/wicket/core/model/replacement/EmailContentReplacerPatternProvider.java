@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
  *
  */
 public class EmailContentReplacerPatternProvider implements EmailContentReplacer.IEmailContentReplacerPatternProvider {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
-	private static final String INNER_DOT = "\\s?\\.\\s?| +dot +|\\s?\\(period\\)\\s?";
+	private static final String INNER_DOT = "\\s?(\\.+|[(<](period|dot)[)>])\\s?| +dot +";
 	/**
 	 * Various ways a 'dot' might be typed in the domain of an email.
 	 */
@@ -24,11 +24,27 @@ public class EmailContentReplacerPatternProvider implements EmailContentReplacer
 	/**
 	 * Repeating subdomains.
 	 */
-	private static final String SUBDOMAIN = "(([a-z0-9-]+|([a-z0-9-] )+)" + DOT + ")";
+	private static final String SUBDOMAIN = "(\\(?([a-z0-9-]+|([a-z0-9-] )+)\\)?" + DOT + ")";
+	/**
+	 * All the different UTF-8 '@' signs.
+	 */
+	private static final String AT_SIGN = "[@\uff20\u0040\ufe6b]+";
+	/**
+	 * An '@' sign or something that looks like it surrounded by punctuation:
+	 * '[{(<' and '>/'>)}]'.
+	 */
+	private static final String AT_PUNCTUATED = "[\\[{()<]{1,2}(at|" + AT_SIGN + ")[\\]})(>]{1,2}";
 	/**
 	 * Variations of an '@' sign.
 	 */
-	private static final String AT = "(\\s*[@\uff20\u0040\ufe6b]+\\s*| *at +| *[\\[{(]at[\\]})] *| *\\(a\\) *)";
+	private static final String AT = "(\\s*" + AT_SIGN + "\\s*| *at +| *" + AT_PUNCTUATED + " *| *\\(a\\) *)";
+	/**
+	 * Same as {@link #AT} but will match if dots follow the word 'at'. This
+	 * is meant for use when searching for a specific list of email domains as
+	 * it will otherwise turn up too many false positives like the string
+	 * "to eat. And".
+	 */
+	private static final String AT_DOT = "(\\s*" + AT_SIGN + "\\s*| *at\\.*\\s*| *" + AT_PUNCTUATED + " *| *\\(a\\) *)";
 	/**
 	 * This matches real email addresses and also some common ways users change email addresses so that they're still
 	 * human readable but not parseable by bots.
@@ -51,8 +67,15 @@ public class EmailContentReplacerPatternProvider implements EmailContentReplacer
 		return DEFAULT_REGEX;
 	}
 
+	/**
+	 * Creates a regex that matches any random domain or a given list of email
+	 * domains. The part of the regex that matches the given domain list
+	 * catches more potential variations but also catches too many false
+	 * positives if applied against anything that looks like a domain.
+	 * @param emailDomains Domains to match.
+	 */
 	public EmailContentReplacerPatternProvider(@Nonnull final Collection<String> emailDomains) {
-		this.pattern = '(' + EMAIL_REGEX + '|' + LOCAL_PART + AT + constructEmailDomainRegex(emailDomains) + ')';
+		this.pattern = '(' + EMAIL_REGEX + '|' + LOCAL_PART + AT_DOT + constructEmailDomainRegex(emailDomains) + ')';
 	}
 
 	/**
