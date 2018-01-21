@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2015 Pushing Inertia
+/* Copyright (c) 2011-2018 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,9 +24,14 @@ public abstract class WebLinkContentReplacer implements ContentReplacer {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * This matches common links users might include in their inputs.
+	 * Matches a path in a URL.
 	 */
-	public static final String LINK_REGEX = "(https?://([a-z0-9-]+\\.)+[a-z]{2,7}(/[^ \\n]*){0,1}|www\\.[a-z0-9-]+\\.[a-z]{2,7}(/[^ \\n]*){0,1})";
+	private static final String LINK_PATH = "(/[^ \\n]*){0,1}";
+	/**
+	 * Matches common links users might include in their inputs.
+	 */
+	private static final String LINK_REGEX =
+			"(https?://([a-z0-9-]+\\.)+[a-z]{2,}" + LINK_PATH + "|www\\s*\\.\\s*[a-z0-9-]+\\s*\\.\\s*[a-z]{2,7}" + LINK_PATH + ")";
 
 	@Nonnull
 	@Override

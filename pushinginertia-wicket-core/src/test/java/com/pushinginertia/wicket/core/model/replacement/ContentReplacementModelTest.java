@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2014 Pushing Inertia
+/* Copyright (c) 2011-2018 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +34,7 @@ public class ContentReplacementModelTest {
 					return "[web link]";
 				}
 			};
-	public static final NumberSequenceToLinkContentReplacer NUMBER_TO_LINK =
+	private static final NumberSequenceToLinkContentReplacer NUMBER_TO_LINK =
 			new NumberSequenceToLinkContentReplacer(7, "/contact", "number link");
 
 	@Test
@@ -167,31 +167,38 @@ public class ContentReplacementModelTest {
 				model.getObject());
 	}
 
-	@Test
-	public void webLink() {
+	private void assertWebLinkReplaced(final String original, final String expected) {
 		final ContentReplacerList.Builder builder = new ContentReplacerList.Builder();
 		builder.add(WEB_LINK);
+
 		final ContentReplacementModel model =
 				new ContentReplacementModel(
-						Model.of("go to http://example.ca/a-long-directory-name-with-hyphens-and-UPPERCASE-and-an-@-sign/SDDFKD3827495743 for my awesome web page"),
+						Model.of(original),
 						builder.build());
-		Assert.assertEquals(
-				"go to [web link] for my awesome web page",
-				model.getObject());
 
-		model.setObject("check out my photos:\nhttp://www.flickr.com/photos/827592947475440538723632@A12/sets/93287643590549026723/\n\n");
-		Assert.assertEquals(
-				"check out my photos:\n[web link]\n\n",
-				model.getObject());
+		Assert.assertEquals(expected, model.getObject());
+	}
 
-		model.setObject("check out my site at www.example.com, you'll like it");
-		Assert.assertEquals(
-				"check out my site at [web link], you'll like it",
-				model.getObject());
+	@Test
+	public void webLink() {
+		assertWebLinkReplaced(
+				"go to http://example.ca/a-long-directory-name-with-hyphens-and-UPPERCASE-and-an-@-sign/SDDFKD3827495743 for my awesome web page",
+				"go to [web link] for my awesome web page");
 
-		model.setObject("check out my site at www.example.com/path1/path2 - you'll like it");
-		Assert.assertEquals(
-				"check out my site at [web link] - you'll like it",
-				model.getObject());
+		assertWebLinkReplaced(
+				"check out my photos:\nhttp://www.flickr.com/photos/827592947475440538723632@A12/sets/93287643590549026723/\n\n",
+				"check out my photos:\n[web link]\n\n");
+
+		assertWebLinkReplaced(
+				"check out my site at www.example.com, you'll like it",
+				"check out my site at [web link], you'll like it");
+
+		assertWebLinkReplaced(
+				"check out my site at www.example.com/path1/path2 - you'll like it",
+				"check out my site at [web link] - you'll like it");
+
+		assertWebLinkReplaced(
+				"Website: www. example. com",
+				"Website: [web link]");
 	}
 }
