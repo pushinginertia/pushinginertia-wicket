@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2015 Pushing Inertia
+/* Copyright (c) 2011-2018 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,8 @@ import javax.annotation.Nonnull;
 public abstract class WeChatContentReplacer implements ContentReplacer {
 	private static final long serialVersionUID = 1L;
 
-	private static final String PATTERN = "微 ?信[:：]?\\s*[a-zA-Z0-9\\.]+([(（].*[)）])?";
+	private static final String PATTERN =
+			"(微 ?信号?|wechat)(\\s*id)?\\s*[:：]?\\s*[a-zA-Z0-9_\\.]+([(（].*[)）])?";
 
 	@Nonnull
 	@Override

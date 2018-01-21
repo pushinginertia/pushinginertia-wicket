@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2015 Pushing Inertia
+/* Copyright (c) 2011-2018 Pushing Inertia
  * All rights reserved.  http://pushinginertia.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,13 +40,25 @@ public class WeChatContentReplacerTest {
 						Model.of(
 								"微 信：Username9876（微信）\n" +
 								"微 信： Username9876（微信）\n" +
-								"或微信:       user1234567\n"),
+								"或微信:       user1234567\n" +
+								"微信号：user_name\n" +
+								"微信号Username\n" +
+								"WeChat ID: user1234\n" +
+								"wechat: user1234\n" +
+								"wechat user1234\n" +
+								"WeChat: user1234\n"),
 						builder.build());
 
 		Assert.assertEquals(
 				"[blocked]\n" +
 				"[blocked]\n" +
-				"或[blocked]\n",
+				"或[blocked]\n" +
+				"[blocked]\n" +
+				"[blocked]\n" +
+				"[blocked]\n" +
+				"[blocked]\n" +
+				"[blocked]\n" +
+				"[blocked]\n",
 				model.getObject());
 	}
 }
