@@ -31,6 +31,6 @@ public class ComponentUtilsTest {
 		EasyMock.expect(hsr.getScheme()).andReturn(scheme);
 		EasyMock.expect(hsr.getServerPort()).andReturn(port);
 		EasyMock.replay(request, hsr);
-		Assert.assertEquals(expectedUrl, ComponentUtils.constructUrl(request, hostName, path));
+		Assert.assertEquals(expectedUrl, ComponentUtils.constructUrl(request, hostName, path, false));
 	}
 }

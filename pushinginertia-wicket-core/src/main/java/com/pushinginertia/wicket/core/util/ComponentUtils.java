@@ -67,7 +67,7 @@ public final class ComponentUtils {
 	 */
 	public static String constructUrl(final Request request, final String absolutePath) {
 		final String hostName = request.getUrl().getHost();
-		return constructUrl(request, hostName, absolutePath);
+		return constructUrl(request, hostName, absolutePath, false);
 	}
 
 	/**
@@ -84,7 +84,14 @@ public final class ComponentUtils {
 		final String absolutePath
 	) {
 		ValidateAs.notNull(component, "component");
-		return constructUrl(component.getRequest(), hostName, absolutePath);
+		return constructUrl(component.getRequest(), hostName, absolutePath, false);
+	}
+
+	private static String getScheme(final HttpServletRequest req, final boolean forceHttps) {
+		if (forceHttps) {
+			return "https";
+		}
+		return req.getScheme();
 	}
 
 	/**
@@ -93,18 +100,20 @@ public final class ComponentUtils {
 	 * @param hostName host name to use in the constructed URL
 	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
 	 * omitted
+	 * @param forceHttps Overwrite scheme to https.
 	 * @return
 	 */
 	public static String constructUrl(
 		final Request request,
 		final String hostName,
-		final String absolutePath
+		final String absolutePath,
+		final boolean forceHttps
 	) {
 		ValidateAs.notNull(request, "request");
 		ValidateAs.notEmpty(hostName, "hostName");
 
 		final HttpServletRequest req = (HttpServletRequest)request.getContainerRequest();
-		final String scheme = req.getScheme();
+		final String scheme = getScheme(req, forceHttps);
 		final int port = req.getServerPort();
 
 		final StringBuilder sb = new StringBuilder(scheme);
