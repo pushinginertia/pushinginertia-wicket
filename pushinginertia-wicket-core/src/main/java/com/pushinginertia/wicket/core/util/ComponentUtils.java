@@ -100,7 +100,7 @@ public final class ComponentUtils {
 	 * @param hostName host name to use in the constructed URL
 	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
 	 * omitted
-	 * @param forceHttps Overwrite scheme to https.
+	 * @param forceHttps Overwrite scheme to https. Port from request is ignored.
 	 * @return
 	 */
 	public static String constructUrl(
@@ -114,13 +114,15 @@ public final class ComponentUtils {
 
 		final HttpServletRequest req = (HttpServletRequest)request.getContainerRequest();
 		final String scheme = getScheme(req, forceHttps);
-		final int port = req.getServerPort();
 
 		final StringBuilder sb = new StringBuilder(scheme);
 		sb.append("://");
 		sb.append(hostName);
-		if (port > 0 && !PROTO_TO_PORT.get(scheme).equals(port)) {
-			sb.append(':').append(port);
+		if (!forceHttps) {
+			final int port = req.getServerPort();
+			if (port > 0 && !PROTO_TO_PORT.get(scheme).equals(port)) {
+				sb.append(':').append(port);
+			}
 		}
 		if (absolutePath != null && absolutePath.length() > 0) {
 			if (!absolutePath.startsWith("/")) {
