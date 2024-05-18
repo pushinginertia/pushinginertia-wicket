@@ -58,6 +58,9 @@ public class RedirectToPageException extends RedirectToUrlException {
 			final Class<? extends Page> targetPage,
 			final PageParameters pageParameters,
 			final int statusCode) {
-		super(ComponentUtils.constructRedirectUrl(component, hostName, targetPage, pageParameters), statusCode);
+		super(
+			ComponentUtils.constructRedirectUrl(component, hostName, targetPage, pageParameters, null),
+			statusCode
+		);
 	}
 }

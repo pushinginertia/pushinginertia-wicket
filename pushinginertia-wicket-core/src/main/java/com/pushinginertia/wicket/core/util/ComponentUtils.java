@@ -87,6 +87,28 @@ public final class ComponentUtils {
 		return constructUrl(component.getRequest(), hostName, absolutePath, false);
 	}
 
+	/**
+	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
+	 * @param component component the call is being made from (used to obtain the container request)
+	 * @param hostName host name to use in the constructed URL
+	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
+	 * omitted
+	 * @param hash Optional hash to append to the URL (without '#' symbol).
+	 * @return
+	 */
+	public static String constructUrl(
+		final Component component,
+		final String hostName,
+		final String absolutePath,
+		@Nullable final String hash
+	) {
+		ValidateAs.notNull(component, "component");
+		if (hash == null) {
+			return constructUrl(component.getRequest(), hostName, absolutePath, false);
+		}
+		return constructUrl(component.getRequest(), hostName, absolutePath + '#' + hash, false);
+	}
+
 	private static String getScheme(final HttpServletRequest req, final boolean forceHttps) {
 		if (forceHttps) {
 			return "https";
@@ -140,19 +162,22 @@ public final class ComponentUtils {
 	 * @param hostName host name to use in the constructed URL
 	 * @param targetPage target page
 	 * @param pageParameters parameters for the target page (may be null)
+	 * @param hash Optional hash to append to the URL (without '#' symbol)
 	 * @return full URL
 	 * @see org.apache.wicket.request.UrlRenderer#renderFullUrl(org.apache.wicket.request.Url)
 	 */
 	public static String constructRedirectUrl(
-			@Nonnull final Component component,
-			@Nonnull final String hostName,
-			@Nonnull final Class<? extends Page> targetPage,
-			final PageParameters pageParameters) {
+		@Nonnull final Component component,
+		@Nonnull final String hostName,
+		@Nonnull final Class<? extends Page> targetPage,
+		final PageParameters pageParameters,
+		@Nullable final String hash
+	) {
 		ValidateAs.notNull(component, "component");
 		ValidateAs.notNull(targetPage, "targetPage");
 
 		String absolutePath = constructAbsolutePath(component, targetPage, pageParameters);
-		return constructUrl(component, hostName, absolutePath);
+		return constructUrl(component, hostName, absolutePath, hash);
 	}
 
 	/**
