@@ -116,25 +116,14 @@ public final class ComponentUtils {
 		return req.getScheme();
 	}
 
-	/**
-	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
-	 * @param request object encapsulating the request to the server (used to obtain the container request)
-	 * @param hostName host name to use in the constructed URL
-	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
-	 * omitted
-	 * @param forceHttps Overwrite scheme to https. Port from request is ignored.
-	 * @return
-	 */
 	public static String constructUrl(
-		final Request request,
+		final HttpServletRequest req,
 		final String hostName,
 		final String absolutePath,
 		final boolean forceHttps
 	) {
-		ValidateAs.notNull(request, "request");
 		ValidateAs.notEmpty(hostName, "hostName");
 
-		final HttpServletRequest req = (HttpServletRequest)request.getContainerRequest();
 		final String scheme = getScheme(req, forceHttps);
 
 		final StringBuilder sb = new StringBuilder(scheme);
@@ -153,6 +142,26 @@ public final class ComponentUtils {
 			sb.append(absolutePath);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Constructs a URL by using the same port and scheme/protocol as what was used to request the current page.
+	 * @param request object encapsulating the request to the server (used to obtain the container request)
+	 * @param hostName host name to use in the constructed URL
+	 * @param absolutePath absolute path to append after the host name (can be null), a leading '/' will be added if
+	 * omitted
+	 * @param forceHttps Overwrite scheme to https. Port from request is ignored.
+	 * @return
+	 */
+	public static String constructUrl(
+		final Request request,
+		final String hostName,
+		final String absolutePath,
+		final boolean forceHttps
+	) {
+		ValidateAs.notNull(request, "request");
+		final HttpServletRequest req = (HttpServletRequest)request.getContainerRequest();
+		return constructUrl(req, hostName, absolutePath, forceHttps);
 	}
 
 	/**
